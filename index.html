@@ -13,129 +13,123 @@
 
 <h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
 
-<!-- ================= ROUTE INPUT ================ -->
+<!-- ROUTE SELECTION -->
 <div class="grid grid-cols-2 gap-4">
-<div>
-<label class="font-semibold">From</label>
-<select id="from" class="w-full border p-2 rounded"></select>
-</div>
-<div>
-<label class="font-semibold">To</label>
-<select id="to" class="w-full border p-2 rounded"></select>
-</div>
-</div>
-
-<!-- ================= ROUTE INFO ================ -->
-<div class="grid grid-cols-3 gap-4 text-center my-5 font-bold text-lg">
-<div class="bg-gray-50 p-3 rounded">Load KM<br><span id="load">-</span></div>
-<div class="bg-gray-50 p-3 rounded">Empty KM<br><span id="empty">-</span></div>
-<div class="bg-gray-50 p-3 rounded">Advance ₹<br><span id="adv">-</span></div>
+<select id="from" class="p-2 border rounded"></select>
+<select id="to" class="p-2 border rounded"></select>
 </div>
 
 <hr class="my-4">
 
-<!-- ================= INPUT VALUES ================ -->
+<!-- NOW LOAD / EMPTY / ADV = EDITABLE -->
+<div class="grid grid-cols-3 gap-4 text-center my-3 font-semibold">
+<div>
+<label>Load KM</label>
+<input id="loadKM" class="text-center border p-2 rounded w-full" type="number">
+</div>
+<div>
+<label>Empty KM</label>
+<input id="emptyKM" class="text-center border p-2 rounded w-full" type="number">
+</div>
+<div>
+<label>Advance ₹</label>
+<input id="advAmt" class="text-center border p-2 rounded w-full" type="number">
+</div>
+</div>
+
+<hr class="my-4">
+
+<!-- INPUTS -->
 <div class="grid grid-cols-2 gap-4">
 <input id="qty" type="number" placeholder="Qty MT" class="p-2 border rounded">
 <input id="rate" type="number" placeholder="Rate ₹/MT" class="p-2 border rounded">
-<input id="comm" type="number" value="5" placeholder="Commission %" class="p-2 border rounded">
-<input id="mamul" type="number" value="300" placeholder="Mamul ₹" class="p-2 border rounded">
-<input id="over" type="number" value="0" placeholder="Overload ₹" class="p-2 border rounded">
-<input id="toll" type="number" value="0" placeholder="Toll Tax ₹" class="p-2 border rounded">
+<input id="comm" type="number" placeholder="Commission %" value="5" class="p-2 border rounded">
+<input id="mamul" type="number" placeholder="Mamul ₹" value="300" class="p-2 border rounded">
+<input id="over" type="number" placeholder="Overload ₹" value="0" class="p-2 border rounded">
+<input id="toll" type="number" placeholder="Toll Tax ₹" value="0" class="p-2 border rounded">
 </div>
 
-<button id="calculate" class="mt-5 w-full bg-black text-white font-bold p-3 rounded-lg text-lg">CALCULATE</button>
+<button id="calculate" class="mt-5 w-full bg-black text-white font-bold p-3 rounded-lg">CALCULATE</button>
 
-<!-- ================= OUTPUT ================ -->
-<div id="output" class="hidden mt-6 text-lg font-semibold">
-
-<hr class="mb-3">
-
-<p>Freight: <span id="freight"></span></p>
-<p>Commission: <span id="commissionRs"></span></p>
-<p>Mamul: <span id="mamulRs"></span></p>
-<p>Net Freight: <span id="netFreight"></span></p>
+<!-- RESULT SECTION -->
+<div id="output" class="hidden text-lg mt-6 font-semibold">
+<hr>
+<p>Freight: <span id="outFreight"></span></p>
+<p>Commission: <span id="outComm"></span></p>
+<p>Mamul: <span id="outMamul"></span></p>
+<p>Net Freight: <span id="outNet"></span></p>
 <br>
-<p>Total Trip Expense: <span id="expense"></span></p>
-<p class="text-green-600 text-2xl">Savings: <span id="saving"></span> </p>
-
-<hr class="mt-4">
-
+<p>Total Trip Expense: <span id="outExp"></span></p>
+<p class="text-green-600 text-xl">Savings: <span id="outSave"></span></p>
+<hr>
 </div>
+
 </div>
 
 <script>
-/* ================ 🔥 ROUTE MASTER 23 DESTINATIONS 🔥 ================= */
 
+/* ================= ROUTE MASTER ================= */
 const ROUTES = [
- {from:"Hazira", to:"Taloja",      load:350, empty:100, adv:21000},
- {from:"Hazira", to:"Kalamboli",   load:350, empty:100, adv:21000},
- {from:"Hazira", to:"Panvel",      load:350, empty:100, adv:21000},
- {from:"Hazira", to:"Thane",       load:350, empty:100, adv:21000},
- {from:"Hazira", to:"Khopoli",     load:370, empty:50,  adv:21400},
- {from:"Hazira", to:"Khalapur",    load:370, empty:50,  adv:21400},
- {from:"Hazira", to:"Ahemdabad",   load:300, empty:0,   adv:15080},
- {from:"Hazira", to:"Bavla",       load:300, empty:0,   adv:15080},
- {from:"Hazira", to:"Vatva",       load:300, empty:0,   adv:15080},
- {from:"Hazira", to:"Changodar",   load:300, empty:0,   adv:15080},
- {from:"Hazira", to:"Khatrej",     load:330, empty:0,   adv:16430},
- {from:"Hazira", to:"Sanand",      load:330, empty:0,   adv:16430},
- {from:"Hazira", to:"Kalol",       load:330, empty:0,   adv:16430},
- {from:"Hazira", to:"Chhatral",    load:330, empty:0,   adv:16430},
- {from:"Hazira", to:"Gandhinagar", load:330, empty:0,   adv:16430},
- {from:"Hazira", to:"Mehsana",     load:380, empty:0,   adv:18500},
- {from:"Hazira", to:"Vithalapur",  load:380, empty:0,   adv:19400},
- {from:"Hazira", to:"Vadodara",    load:210, empty:210, adv:15780},
- {from:"Hazira", to:"Savli",       load:210, empty:210, adv:15780},
- {from:"Hazira", to:"Por",         load:210, empty:210, adv:15780},
- {from:"Hazira", to:"Kheda",       load:280, empty:0,   adv:13770},
- {from:"Hazira", to:"Halol",       load:230, empty:230, adv:16830},
- {from:"Hazira", to:"Vadindar",    load:625, empty:0,   adv:30300}
+ {from:"Hazira",to:"Taloja",load:350,empty:100,adv:21000},
+ {from:"Hazira",to:"Kalamboli",load:350,empty:100,adv:21000},
+ {from:"Hazira",to:"Panvel",load:350,empty:100,adv:21000},
+ {from:"Hazira",to:"Thane",load:350,empty:100,adv:21000},
+ {from:"Hazira",to:"Khopoli",load:370,empty:50,adv:21400},
+ {from:"Hazira",to:"Khalapur",load:370,empty:50,adv:21400},
+ {from:"Hazira",to:"Ahemdabad",load:300,empty:0,adv:15080},
+ {from:"Hazira",to:"Bavla",load:300,empty:0,adv:15080},
+ {from:"Hazira",to:"Vatva",load:300,empty:0,adv:15080},
+ {from:"Hazira",to:"Changodar",load:300,empty:0,adv:15080},
+ {from:"Hazira",to:"Khatrej",load:330,empty:0,adv:16430},
+ {from:"Hazira",to:"Sanand",load:330,empty:0,adv:16430},
+ {from:"Hazira",to:"Kalol",load:330,empty:0,adv:16430},
+ {from:"Hazira",to:"Chhatral",load:330,empty:0,adv:16430},
+ {from:"Hazira",to:"Gandhinagar",load:330,empty:0,adv:16430},
+ {from:"Hazira",to:"Mehsana",load:380,empty:0,adv:18500},
+ {from:"Hazira",to:"Vithalapur",load:380,empty:0,adv:19400},
+ {from:"Hazira",to:"Vadodara",load:210,empty:210,adv:15780},
+ {from:"Hazira",to:"Savli",load:210,empty:210,adv:15780},
+ {from:"Hazira",to:"Por",load:210,empty:210,adv:15780},
+ {from:"Hazira",to:"Kheda",load:280,empty:0,adv:13770},
+ {from:"Hazira",to:"Halol",load:230,empty:230,adv:16830},
+ {from:"Hazira",to:"Vadindar",load:625,empty:0,adv:30300}
 ];
 
-/* ============= DROPDOWN AUTO LOAD ============= */
-
+/* LOAD DROPDOWNS */
 function loadFrom(){
- from.innerHTML=`<option value="">Select</option>`;
- [...new Set(ROUTES.map(r=>r.from))].forEach(f=>from.innerHTML+=`<option>${f}</option>`);
+ from.innerHTML=`<option>Select</option>`;
+ [...new Set(ROUTES.map(x=>x.from))].forEach(f=>from.innerHTML+=`<option>${f}</option>`);
 }
 from.onchange=()=>{
- to.innerHTML=`<option value="">Select</option>`;
- ROUTES.filter(r=>r.from==from.value).forEach(r=>to.innerHTML+=`<option>${r.to}</option>`);
- update();
+ to.innerHTML="<option>Select</option>"
+ ROUTES.filter(x=>x.from==from.value).forEach(r=>to.innerHTML+=`<option>${r.to}</option>`)
 }
-to.onchange=update;
-
-/* DISPLAY KM/ADV */
-function update(){
- let r=ROUTES.find(r=>r.from==from.value && r.to==to.value);
- if(!r) return;
- load.textContent=r.load;
- empty.textContent=r.empty;
- adv.textContent="₹ "+r.adv;
+to.onchange=()=>{
+ let r=ROUTES.find(x=>x.from==from.value && x.to==to.value);
+ if(r){
+   loadKM.value=r.load;
+   emptyKM.value=r.empty;
+   advAmt.value=r.adv; // editable bhi rahega
+ }
 }
 
-/* ============= CALCULATION ENGINE ============= */
-
-document.getElementById("calculate").onclick=()=>{
- let r=ROUTES.find(r=>r.from==from.value && r.to==to.value);
- if(!r){alert("Select Route First");return;}
-
- let qty=+qty.value, rate=+rate.value, comm=+comm.value, mam=+mamul.value;
- let over=+over.value, toll=+toll.value;
+/* CALCULATION */
+calculate.onclick=()=>{
+ let qty=+qty.value, rate=+rate.value, mam=+mamul.value;
+ let comm=+comm.value, over=+over.value, toll=+toll.value;
 
  let freight=qty*rate;
- let commissionRs=freight*comm/100;
- let netFreight=freight-commissionRs-mam;
- let expense=r.adv+over+toll;
- let saving=netFreight-expense;
+ let commission=freight*comm/100;
+ let net=freight-commission-mam;
+ let exp=(+advAmt.value)+over+toll;
+ let saving=net-exp;
 
- freight.textContent="₹ "+freight.toFixed(0);
- commissionRs.textContent="₹ "+commissionRs.toFixed(0);
- mamulRs.textContent="₹ "+mam;
- netFreight.textContent="₹ "+netFreight.toFixed(0);
- expense.textContent="₹ "+expense.toFixed(0);
- saving.textContent="₹ "+saving.toFixed(0);
+ outFreight.innerText="₹ "+freight.toFixed(0);
+ outComm.innerText="₹ "+commission.toFixed(0);
+ outMamul.innerText="₹ "+mam;
+ outNet.innerText="₹ "+net.toFixed(0);
+ outExp.innerText="₹ "+exp.toFixed(0);
+ outSave.innerText="₹ "+saving.toFixed(0);
 
  output.classList.remove("hidden");
 }
