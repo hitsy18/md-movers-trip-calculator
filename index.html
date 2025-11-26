@@ -1,148 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>MD MOVERS – TRIP CALCULATOR</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <title>MD MOVERS – TRIP CALCULATOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 py-6 flex justify-center">
-<div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6">
+  <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6">
+    <h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
 
-<h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
+    <!-- FROM / TO -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="text-sm font-semibold">From Location</label>
+        <select id="fromSel" class="border p-2 rounded w-full"></select>
+      </div>
+      <div>
+        <label class="text-sm font-semibold">To Location</label>
+        <select id="toSel" class="border p-2 rounded w-full"></select>
+      </div>
+    </div>
 
-<!-- FROM TO -->
-<div class="grid grid-cols-2 gap-4">
-<div>
-<label class="text-sm font-semibold">From Location</label>
-<select id="from" class="border p-2 rounded w-full"></select>
-</div>
-<div>
-<label class="text-sm font-semibold">To Location</label>
-<select id="to" class="border p-2 rounded w-full"></select>
-</div>
-</div>
+    <hr class="my-4" />
 
-<hr class="my-4">
+    <!-- LOAD / EMPTY / ADV -->
+    <div class="grid grid-cols-3 gap-4 font-semibold text-center">
+      <div>
+        <label>Load KM</label>
+        <input id="loadKmInput" type="number" class="border p-2 text-center w-full rounded" />
+      </div>
+      <div>
+        <label>Empty KM</label>
+        <input id="emptyKmInput" type="number" class="border p-2 text-center w-full rounded" />
+      </div>
+      <div>
+        <label>Advance ₹</label>
+        <input id="advInput" type="number" class="border p-2 text-center w-full rounded" />
+      </div>
+    </div>
 
-<!-- LOAD EMPTY ADV -->
-<div class="grid grid-cols-3 gap-4 font-semibold text-center">
-<div>
-<label>Load KM</label>
-<input id="loadKm" type="number" class="border p-2 text-center w-full rounded" />
-</div>
-<div>
-<label>Empty KM</label>
-<input id="emptyKm" type="number" class="border p-2 text-center w-full rounded" />
-</div>
-<div>
-<label>Advance ₹</label>
-<input id="adv" type="number" class="border p-2 text-center w-full rounded" />
-</div>
-</div>
+    <hr class="my-4" />
 
-<hr class="my-4">
+    <!-- FREIGHT / EXP INPUTS -->
+    <div class="grid grid-cols-2 gap-4">
 
-<!-- RATE QTY COMM MAMUL -->
-<div class="grid grid-cols-2 gap-4">
+      <div>
+        <label>Quantity (MT)</label>
+        <input id="qtyInput" type="number" placeholder="Qty MT" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Quantity MT</label>
-<input id="qty" type="number" placeholder="40" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Rate (₹ / MT)</label>
+        <input id="rateInput" type="number" placeholder="Rate ₹/MT" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Rate ₹/MT</label>
-<input id="rate" type="number" placeholder="900" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Commission %</label>
+        <input id="commInput" type="number" value="5" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Commission %</label>
-<input id="comm" type="number" placeholder="5" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Mamul ₹</label>
+        <input id="mamulInput" type="number" value="300" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Mamul ₹</label>
-<input id="mamul" type="number" placeholder="300" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Overload Expense ₹</label>
+        <input id="overInput" type="number" value="0" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Overload Expense ₹</label>
-<input id="over" type="number" placeholder="2" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Toll Tax ₹</label>
+        <input id="tollInput" type="number" value="0" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Toll Tax ₹</label>
-<input id="toll" type="number" placeholder="5" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Load Avg (KM / L)</label>
+        <input id="loadAvgInput" type="number" value="2.1" class="p-2 border rounded w-full" />
+      </div>
 
-<!-- DIESEL FIELDS -->
-<div><label>Diesel Avg (KM/L)</label>
-<input id="dieselAvg" type="number" placeholder="2.5" value="2.5" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Empty Avg (KM / L)</label>
+        <input id="emptyAvgInput" type="number" value="4.0" class="p-2 border rounded w-full" />
+      </div>
 
-<div><label>Diesel Rate ₹/L</label>
-<input id="dieselRate" type="number" placeholder="92" value="92" class="p-2 border rounded w-full"/></div>
+      <div>
+        <label>Diesel Rate (₹ / L)</label>
+        <input id="dieselRateInput" type="number" value="92" class="p-2 border rounded w-full" />
+      </div>
 
-</div>
+    </div>
 
-<button id="calculate" class="mt-6 w-full bg-black text-white p-3 rounded-lg font-bold text-lg">
-CALCULATE
-</button>
+    <button
+      id="calcBtn"
+      class="mt-6 w-full bg-black text-white p-3 rounded-lg font-bold text-lg">
+      CALCULATE
+    </button>
 
-<!-- RESULT BOX -->
-<div id="result" class="hidden mt-6 text-lg font-semibold border-t pt-4">
-Freight: <span id="r_freight"></span> ₹<br>
-Commission: <span id="r_comm"></span> ₹<br>
-Mamul: <span id="r_mamul"></span> ₹<br>
-Net Freight: <span id="r_net"></span> ₹<br><br>
-Diesel Used + Cost: <span id="r_diesel"></span><br>
-Trip Expense: <span id="r_exp"></span> ₹<br><br>
-💰 <span class="text-green-600 text-2xl">Saving: <span id="r_save"></span> ₹</span>
-</div>
+    <!-- RESULT -->
+    <div id="resultBox" class="hidden mt-6 text-lg font-semibold border-t pt-4">
+      <p>Freight: <span id="outFreight"></span> ₹</p>
+      <p>Commission: <span id="outComm"></span> ₹</p>
+      <p>Mamul: <span id="outMamul"></span> ₹</p>
+      <p>Net Freight: <span id="outNet"></span> ₹</p>
+      <br />
+      <p>Diesel Used + Cost: <span id="outDiesel"></span></p>
+      <p>Total Trip Expense: <span id="outExp"></span> ₹</p>
+      <br />
+      <p class="text-green-600 text-2xl">
+        Saving: <span id="outSave"></span> ₹
+      </p>
+    </div>
+  </div>
 
-</div>
+  <script>
+    // ---------------- ROUTE MASTER DATA ----------------
+    const ROUTES = [
+      { from: "Hazira", to: "Taloja",     load: 350, empty: 100, adv: 21000 },
+      { from: "Hazira", to: "Kalamboli",  load: 350, empty: 100, adv: 21000 },
+      { from: "Hazira", to: "Panvel",     load: 350, empty: 100, adv: 21000 },
+      { from: "Hazira", to: "Thane",      load: 350, empty: 100, adv: 21000 },
+      { from: "Hazira", to: "Khopoli",    load: 370, empty: 50,  adv: 21400 },
+      { from: "Hazira", to: "Khalapur",   load: 370, empty: 50,  adv: 21400 },
+      { from: "Hazira", to: "Ahemdabad",  load: 300, empty: 0,   adv: 15080 },
+      { from: "Hazira", to: "Bavla",      load: 300, empty: 0,   adv: 15080 },
+      { from: "Hazira", to: "Vatva",      load: 300, empty: 0,   adv: 15080 },
+      { from: "Hazira", to: "Changodar",  load: 300, empty: 0,   adv: 15080 },
+      { from: "Hazira", to: "Khatrej",    load: 330, empty: 0,   adv: 16430 },
+      { from: "Hazira", to: "Sanand",     load: 330, empty: 0,   adv: 16430 },
+      { from: "Hazira", to: "Kalol",      load: 330, empty: 0,   adv: 16430 },
+      { from: "Hazira", to: "Chhatral",   load: 330, empty: 0,   adv: 16430 },
+      { from: "Hazira", to: "Gandhinagar",load: 330, empty: 0,   adv: 16430 },
+      { from: "Hazira", to: "Mehsana",    load: 380, empty: 0,   adv: 18500 },
+      { from: "Hazira", to: "Vithalapur", load: 380, empty: 0,   adv: 19400 },
+      { from: "Hazira", to: "Vadodara",   load: 210, empty: 210, adv: 15780 },
+      { from: "Hazira", to: "Savli",      load: 210, empty: 210, adv: 15780 },
+      { from: "Hazira", to: "Por",        load: 210, empty: 210, adv: 15780 },
+      { from: "Hazira", to: "Kheda",      load: 280, empty: 0,   adv: 13770 },
+      { from: "Hazira", to: "Halol",      load: 230, empty: 230, adv: 16830 },
+      { from: "Hazira", to: "Vadindar",   load: 625, empty: 0,   adv: 30300 }
+    ];
 
+    // --------------- ELEMENT REFERENCES ---------------
+    const fromSel        = document.getElementById('fromSel');
+    const toSel          = document.getElementById('toSel');
+    const loadKmInput    = document.getElementById('loadKmInput');
+    const emptyKmInput   = document.getElementById('emptyKmInput');
+    const advInput       = document.getElementById('advInput');
 
-<script>
-// ROUTE MASTER
-const ROUTES = [
- {from:"Hazira",to:"Chhatral",load:330,empty:0,adv:16430},
- // 🔥 add your remaining 23 routes here (same pattern)
-];
+    const qtyInput       = document.getElementById('qtyInput');
+    const rateInput      = document.getElementById('rateInput');
+    const commInput      = document.getElementById('commInput');
+    const mamulInput     = document.getElementById('mamulInput');
+    const overInput      = document.getElementById('overInput');
+    const tollInput      = document.getElementById('tollInput');
 
-// LOAD DROPDOWN
-from.innerHTML="<option>Select</option>";
-[...new Set(ROUTES.map(r=>r.from))].forEach(f=>from.innerHTML+=`<option>${f}</option>`);
+    const loadAvgInput   = document.getElementById('loadAvgInput');
+    const emptyAvgInput  = document.getElementById('emptyAvgInput');
+    const dieselRateInput= document.getElementById('dieselRateInput');
 
-from.onchange=()=>{ to.innerHTML="<option>Select</option>";
- ROUTES.filter(r=>r.from==from.value).forEach(r=>to.innerHTML+=`<option>${r.to}</option>`) }
+    const calcBtn        = document.getElementById('calcBtn');
+    const resultBox      = document.getElementById('resultBox');
 
-to.onchange=()=>{ let r=ROUTES.find(i=>i.from==from.value && i.to==to.value);
- if(!r)return; loadKm.value=r.load; emptyKm.value=r.empty; adv.value=r.adv; }
+    const outFreight     = document.getElementById('outFreight');
+    const outComm        = document.getElementById('outComm');
+    const outMamul       = document.getElementById('outMamul');
+    const outNet         = document.getElementById('outNet');
+    const outDiesel      = document.getElementById('outDiesel');
+    const outExp         = document.getElementById('outExp');
+    const outSave        = document.getElementById('outSave');
 
-//==============================================
-// 🚛 FINAL WORKING CALCULATOR
-//==============================================
-calculate.onclick = ()=>{
+    // --------------- POPULATE DROPDOWNS ---------------
+    function populateFrom() {
+      const fromList = [...new Set(ROUTES.map(r => r.from))];
+      fromSel.innerHTML = '<option value="">Select</option>';
+      fromList.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f;
+        opt.textContent = f;
+        fromSel.appendChild(opt);
+      });
+    }
 
-let qtyv=+qty.value, ratev=+rate.value, commv=+comm.value, mamv=+mamul.value,
-    overv=+over.value, tollv=+toll.value, advv=+adv.value;
+    function populateTo() {
+      const fromVal = fromSel.value;
+      toSel.innerHTML = '<option value="">Select</option>';
+      ROUTES.filter(r => r.from === fromVal).forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.to;
+        opt.textContent = r.to;
+        toSel.appendChild(opt);
+      });
+    }
 
-let avg=+dieselAvg.value, fuelrate=+dieselRate.value;
+    function autoFillRoute() {
+      const fromVal = fromSel.value;
+      const toVal   = toSel.value;
+      const route   = ROUTES.find(r => r.from === fromVal && r.to === toVal);
+      if (!route) return;
+      loadKmInput.value  = route.load;
+      emptyKmInput.value = route.empty;
+      advInput.value     = route.adv;
+      // default averages (can be changed by user)
+      if (!loadAvgInput.value)  loadAvgInput.value  = 2.1;
+      if (!emptyAvgInput.value) emptyAvgInput.value = 4.0;
+    }
 
-// FREIGHT
-let freight=qtyv*ratev;
-let commission=(freight*commv)/100;
-let net=freight-commission-mamv;
+    // --------------- CALCULATION ENGINE ---------------
+    function calculateTrip() {
+      const qty        = parseFloat(qtyInput.value || '0');
+      const rate       = parseFloat(rateInput.value || '0');
+      const commPct    = parseFloat(commInput.value || '0');
+      const mamul      = parseFloat(mamulInput.value || '0');
+      const over       = parseFloat(overInput.value || '0');
+      const toll       = parseFloat(tollInput.value || '0');
 
-// DIESEL
-let totalkm=(+loadKm.value)+(+emptyKm.value);
-let dieselLtr=totalkm/avg;
-let dieselCost=dieselLtr*fuelrate;
+      const loadKm     = parseFloat(loadKmInput.value || '0');
+      const emptyKm    = parseFloat(emptyKmInput.value || '0');
+      const loadAvg    = parseFloat(loadAvgInput.value || '0');
+      const emptyAvg   = parseFloat(emptyAvgInput.value || '0');
+      const dieselRate = parseFloat(dieselRateInput.value || '0');
+      const adv        = parseFloat(advInput.value || '0');
 
-// EXPENSE + SAVING
-let expense=advv+overv+tollv+dieselCost;
-let saving=net-expense;
+      if (!qty || !rate) {
+        alert("Qty aur Rate proper dalo.");
+        return;
+      }
 
-result.classList.remove("hidden");
-r_freight.textContent=freight.toFixed(0);
-r_comm.textContent=commission.toFixed(0);
-r_mamul.textContent=mamv;
-r_net.textContent=net.toFixed(0);
-r_diesel.textContent=`${dieselLtr.toFixed(1)} Ltr → ₹${dieselCost.toFixed(0)}`;
-r_exp.textContent=expense.toFixed(0);
-r_save.textContent=saving.toFixed(0);
-}
-</script>
+      // Freight side
+      const freight    = qty * rate;
+      const commAmt    = freight * commPct / 100;
+      const netFreight = freight - commAmt - mamul;
 
+      // Diesel side (load + empty alag avg)
+      const loadDiesel  = (loadAvg  > 0) ? (loadKm  / loadAvg)  : 0;
+      const emptyDiesel = (emptyAvg > 0) ? (emptyKm / emptyAvg) : 0;
+      const totalDiesel = loadDiesel + emptyDiesel;
+      const dieselCost  = totalDiesel * dieselRate;
+
+      // Expense + saving
+      const totalExpense = adv + over + toll + dieselCost;
+      const saving       = netFreight - totalExpense;
+
+      // UI update
+      outFreight.textContent = freight.toFixed(0);
+      outComm.textContent    = commAmt.toFixed(0);
+      outMamul.textContent   = mamul.toFixed(0);
+      outNet.textContent     = netFreight.toFixed(0);
+
+      outDiesel.textContent  =
+        `${totalDiesel.toFixed(1)} Ltr (₹${dieselCost.toFixed(0)})`;
+      outExp.textContent     = totalExpense.toFixed(0);
+      outSave.textContent    = saving.toFixed(0);
+
+      resultBox.classList.remove('hidden');
+    }
+
+    // --------------- EVENT WIRING ---------------
+    fromSel.addEventListener('change', () => {
+      populateTo();
+      autoFillRoute();
+    });
+
+    toSel.addEventListener('change', autoFillRoute);
+    calcBtn.addEventListener('click', calculateTrip);
+
+    // INIT
+    populateFrom();
+  </script>
 </body>
 </html>
