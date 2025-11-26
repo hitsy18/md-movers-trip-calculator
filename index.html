@@ -9,11 +9,11 @@
 
 <body class="bg-gray-100 py-6 flex justify-center">
 
-<div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6">
+<div class="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-6">
 
 <h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
 
-<!-- FROM / TO -->
+<!-- =================== ROUTE SELECT =================== -->
 <div class="grid grid-cols-2 gap-4">
 <select id="from" class="border p-2 rounded"></select>
 <select id="to" class="border p-2 rounded"></select>
@@ -21,7 +21,7 @@
 
 <hr class="my-4">
 
-<!-- AUTO KM (editable) -->
+<!-- AUTO VALUES (Editable) -->
 <div class="grid grid-cols-3 gap-4 font-semibold text-center">
 <div>
 <label>Load KM</label>
@@ -39,36 +39,44 @@
 
 <hr class="my-4">
 
-<!-- MAIN INPUT -->
+<!-- =================== INPUT =================== -->
 <div class="grid grid-cols-2 gap-4">
 <input id="qty" type="number" placeholder="Qty MT" class="p-2 border rounded"/>
 <input id="rate" type="number" placeholder="Rate ₹/MT" class="p-2 border rounded"/>
-<input id="comm" type="number" value="5" placeholder="Commission %" class="p-2 border rounded"/>
-<input id="mamul" type="number" value="300" placeholder="Mamul ₹" class="p-2 border rounded"/>
-<input id="over" type="number" value="0" placeholder="Overload ₹" class="p-2 border rounded"/>
-<input id="toll" type="number" value="0" placeholder="Toll Tax ₹" class="p-2 border rounded"/>
+<input id="comm" type="number" placeholder="Commission %" value="5" class="p-2 border rounded"/>
+<input id="mamul" type="number" placeholder="Mamul ₹" value="300" class="p-2 border rounded"/>
+<input id="over" type="number" placeholder="Overload ₹" value="0" class="p-2 border rounded"/>
+<input id="toll" type="number" placeholder="Toll Tax ₹" value="0" class="p-2 border rounded"/>
+
+<!-- 🔥 NEW DIESEL INPUT -->
+<input id="dieselAvg" type="number" placeholder="Diesel Avg (km/L)" value="2.5" class="p-2 border rounded"/>
+<input id="dieselRate" type="number" placeholder="Diesel Rate ₹/L" value="92" class="p-2 border rounded"/>
 </div>
 
 <button id="calculate" class="mt-5 w-full bg-black text-white p-3 rounded font-bold text-lg">CALCULATE</button>
 
-<!-- RESULT -->
+<!-- =================== RESULT =================== -->
 <div id="result" class="hidden mt-5 text-lg font-semibold">
-<hr/><br>
+<hr><br>
 Freight: <span id="r_freight"></span><br>
 Commission: <span id="r_comm"></span><br>
 Mamul: <span id="r_mamul"></span><br>
 Net Freight: <span id="r_net"></span><br><br>
+
+<!-- 🔥 Diesel Summary -->
+Diesel Usage + Cost: <span id="r_diesel"></span><br>
+
 Trip Expense: <span id="r_exp"></span><br>
-<span class="text-green-600 text-xl">Savings: <span id="r_save"></span></span>
-<br><hr>
+<span class="text-green-600 text-2xl">Savings: <span id="r_save"></span></span><br>
+<hr>
 </div>
 </div>
 
 
 <script>
-//********************************************************
-// ROUTES
-//********************************************************
+// ======================================================
+// ROUTE DATABASE
+// ======================================================
 const ROUTES = [
  {from:"Hazira",to:"Taloja",load:350,empty:100,adv:21000},
  {from:"Hazira",to:"Kalamboli",load:350,empty:100,adv:21000},
@@ -95,57 +103,56 @@ const ROUTES = [
  {from:"Hazira",to:"Vadindar",load:625,empty:0,adv:30300}
 ];
 
-//********************************************************
-// LOAD From → To dropdown
-//********************************************************
-function loadFrom(){
- from.innerHTML = `<option value="">Select</option>`;
-[...new Set(ROUTES.map(r=>r.from))].forEach(f=> from.innerHTML+=`<option>${f}</option>`);
+// populate dropdown
+from.innerHTML=`<option>Select</option>`;
+[...new Set(ROUTES.map(x=>x.from))].forEach(f=>from.innerHTML+=`<option>${f}</option>`);
+
+from.onchange=()=>{
+ to.innerHTML="<option>Select</option>";
+ ROUTES.filter(r=>r.from==from.value).forEach(r=>to.innerHTML+=`<option>${r.to}</option>`)
 }
 
-// when from changes => load to
-from.onchange = ()=>{
- to.innerHTML=`<option value="">Select</option>`;
- ROUTES.filter(r=>r.from==from.value)
-       .forEach(r=> to.innerHTML+=`<option>${r.to}</option>`);
-}
-
-to.onchange = ()=>{
+to.onchange=()=>{
  let r=ROUTES.find(x=>x.from==from.value && x.to==to.value);
  if(!r)return;
  loadKm.value=r.load;
  emptyKm.value=r.empty;
- adv.value=r.adv; // editable yes
+ adv.value=r.adv;
 }
 
-//********************************************************
-// CALCULATE
-//********************************************************
+// ======================================================
+// 🔥 MAIN CALCULATION ENGINE
+// ======================================================
 calculate.onclick = ()=>{
 
  let qty=+qty.value, rate=+rate.value, comm=+comm.value, mam=+mamul.value,
      over=+over.value, toll=+toll.value, advv=+adv.value;
 
- if(!qty||!rate){ alert("Qty & Rate enter kare"); return; }
+ // DIESEL ENGINE
+ let avg=+dieselAvg.value, dieselRate=+dieselRate.value;
+ let totalKm = (+loadKm.value)+(+emptyKm.value);
+ let dieselLtr = totalKm/avg;
+ let dieselCost = dieselLtr*dieselRate;
 
- let freight=qty*rate;
- let commission=(freight*comm)/100;
- let net=freight-commission-mam;
- let expense=advv+over+toll;
- let save=net-expense;
+ // MAIN FREIGHT
+ let freight = qty * rate;
+ let commission = (freight*comm)/100;
+ let net = freight - commission - mam;
+ let expense = advv + over + toll + dieselCost;
+ let saving  = net - expense;
 
+ // OUTPUT
  r_freight.textContent="₹ "+freight.toFixed(0);
  r_comm.textContent="₹ "+commission.toFixed(0);
  r_mamul.textContent="₹ "+mam;
  r_net.textContent="₹ "+net.toFixed(0);
  r_exp.textContent="₹ "+expense.toFixed(0);
- r_save.textContent="₹ "+save.toFixed(0);
+ r_save.textContent="₹ "+saving.toFixed(0);
+
+ r_diesel.textContent = `${dieselLtr.toFixed(1)} Ltr → ₹${dieselCost.toFixed(0)}`;
 
  result.classList.remove("hidden");
 }
-
-// START
-loadFrom();
 </script>
 
 </body>
