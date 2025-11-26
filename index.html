@@ -1,179 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>MD Movers - Trip Calculator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100 text-gray-900">
-
-  <!-- HEADER -->
-  <header class="bg-gray-900 text-white px-5 py-3 shadow">
-    <h1 class="text-xl font-bold">MD MOVERS – TRIP CALCULATOR</h1>
-    <p class="text-xs text-gray-300">Hazira Transport Route Calculator | Web + Mobile Version</p>
-  </header>
-
-  <main class="max-w-4xl mx-auto p-5 space-y-5">
-
-    <!-- MAIN CARD -->
-    <div class="bg-white shadow-xl p-5 rounded-xl space-y-5">
-
-      <h2 class="text-lg font-semibold">Trip Calculation Module</h2>
-
-      <!-- FROM / TO -->
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label>From</label>
-          <select id="fromSelect" class="input"></select>
-        </div>
-        <div>
-          <label>To</label>
-          <select id="toSelect" class="input"></select>
-        </div>
-      </div>
-
-      <!-- ROUTE VIEW -->
-      <div class="grid grid-cols-3 gap-3 text-sm font-semibold">
-        <div class="box">Load KM<br><span id="loadKm" class="v"></span></div>
-        <div class="box">Empty KM<br><span id="emptyKm" class="v"></span></div>
-        <div class="box">Advance ₹<br><span id="advAmt" class="v"></span></div>
-      </div>
-
-      <hr>
-
-      <!-- INPUTS -->
-      <div class="grid grid-cols-4 gap-3">
-        <div>
-          <label>Qty (MT)</label>
-          <input type="number" id="qty" class="input" placeholder="38.50">
-        </div>
-        <div>
-          <label>Rate /MT ₹</label>
-          <input type="number" id="rate" class="input" placeholder="925">
-        </div>
-        <div>
-          <label>Commission %</label>
-          <input type="number" id="comm" value="5" class="input">
-        </div>
-        <div>
-          <label>Mamul ₹</label>
-          <input type="number" id="mamul" value="300" class="input">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-3 gap-3">
-        <div><label>Overload Exp ₹</label><input type="number" id="overload" value="0" class="input"></div>
-        <div><label>Toll Tax ₹</label><input type="number" id="toll" value="0" class="input"></div>
-
-        <button id="calcBtn" class="bg-gray-900 text-white rounded-lg mt-6 py-2 font-semibold hover:bg-black">
-          CALCULATE
-        </button>
-      </div>
-
-      <!-- OUTPUT -->
-      <div class="grid grid-cols-2 gap-3 text-sm">
-        <div class="outBox">
-          Freight: <span id="freight"></span><br>
-          Comm ₹: <span id="commRs"></span><br>
-          Mamul ₹: <span id="mamulRs"></span><hr>
-          Net Freight: <span id="net"></span>
-        </div>
-        <div class="outBox">
-          Trip Exp: <span id="tripExp"></span><br>
-          Savings: <span id="save" class="text-green-600 font-bold"></span>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-
-<style>
-  .input{width:100%;padding:6px;border:1px solid #bbb;border-radius:6px}
-  .box{background:#f5f5f5;padding:10px;border-radius:8px;text-align:center}
-  .v{font-size:18px;font-weight:bold}
-  .outBox{background:#f1f1f1;padding:12px;border-radius:8px}
-</style>
-
-
 <script>
-/* ================================
-   ROUTE MASTER (Add 300 Routes Here)
-================================= */
-
 const routes=[
  {from:"Hazira",to:"Kalamboli",load:350,empty:100,adv:21000},
  {from:"Hazira",to:"Bhiwandi",load:320,empty:120,adv:20500},
 ];
 
-
-/* ================================
-   Populate Dropdown
-================================= */
 function loadFrom(){
-  let list=[...new Set(routes.map(x=>x.from))];
-  let sel=document.getElementById("fromSelect");
-  sel.innerHTML=`<option value="">Select</option>`;
-  list.forEach(v=> sel.innerHTML+=`<option>${v}</option>`);
+ let s=document.getElementById("fromSelect");
+ s.innerHTML="<option value=''>Select</option>";
+ [...new Set(routes.map(x=>x.from))].forEach(f=>s.innerHTML+=`<option>${f}</option>`);
 }
 
 function loadTo(){
-  let f=document.getElementById("fromSelect").value;
-  let sel=document.getElementById("toSelect");
-  sel.innerHTML=`<option value="">Select</option>`;
-  routes.filter(x=>x.from==f).forEach(
-   r=> sel.innerHTML+=`<option>${r.to}</option>`
-  );
+ let f=document.getElementById("fromSelect").value;
+ let s=document.getElementById("toSelect");
+ s.innerHTML="<option value=''>Select</option>";
+ routes.filter(x=>x.from==f).forEach(r=>s.innerHTML+=`<option>${r.to}</option>`);
+ updateInfo();
 }
-
-/* ================================
-   On Route Select → Auto Load Figures
-================================= */
 
 function updateInfo(){
- let f=fromSelect.value,t=toSelect.value;
- let r=routes.find(v=>v.from==f && v.to==t);
-
+ let f=fromSelect.value, t=toSelect.value;
+ let r=routes.find(x=>x.from==f && x.to==t);
  document.getElementById("loadKm").innerText=r?r.load:"-";
  document.getElementById("emptyKm").innerText=r?r.empty:"-";
- document.getElementById("advAmt").innerText=r?"₹ "+r.adv:"-";
+ document.getElementById("advAmt").innerText=r?("₹ "+r.adv):"-";
 }
 
-/* ================================
-   CALCULATION ENGINE 🔥
-================================= */
-calcBtn.onclick=()=>{
- let f=document.getElementById("fromSelect").value;
- let t=document.getElementById("toSelect").value;
+document.getElementById("calcBtn").onclick=()=>{
+ let f=fromSelect.value,t=toSelect.value;
  let r=routes.find(x=>x.from==f && x.to==t);
- if(!r){alert("Route Not Found❗");return;}
+ if(!r){alert("❗ Route not found");return;}
 
- let qty=+qty.value,rate=+rate.value,comm=+comm.value,mamul=+mamul.value;
+ let qty=+qtyInput.value,rate=+rate.value,comm=+comm.value,mamul=+mamul.value;
  let freight=qty*rate;
- let comAmt=freight*comm/100;
- let net=freight-comAmt-mamul;
+ let commRs=(freight*comm)/100;
+ let net=freight-commRs-mamul;
 
  let exp=r.adv + (+overload.value) + (+toll.value);
  let save=net-exp;
 
- freight.innerText=freight.toFixed(0);
- commRs.innerText=comAmt.toFixed(0);
- mamulRs.innerText=mamul;
- net.innerText=net.toFixed(0);
- tripExp.innerText=exp.toFixed(0);
- save.innerText=save.toFixed(0);
+ document.getElementById("freight").innerText="₹ "+freight.toFixed(0);
+ document.getElementById("commRs").innerText="₹ "+commRs.toFixed(0);
+ document.getElementById("mamulRs").innerText="₹ "+mamul;
+ document.getElementById("net").innerText="₹ "+net.toFixed(0);
+
+ document.getElementById("tripExp").innerText="₹ "+exp.toFixed(0);
+ document.getElementById("save").innerText="₹ "+save.toFixed(0);
 };
 
-/* INIT */
 loadFrom();
 fromSelect.onchange=loadTo;
 toSelect.onchange=updateInfo;
-
 </script>
-
-</body>
-</html>
