@@ -1,141 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>MD MOVERS – TRIP CALCULATOR</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <title>MD MOVERS – TRIP CALCULATOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body class="bg-gray-100 py-6 flex justify-center">
 
-<div class="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-6">
+  <div class="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-6">
+    <h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
 
-<h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
+    <!-- FROM / TO -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="font-semibold">From</label>
+        <select id="fromSelect" class="w-full p-2 border rounded"></select>
+      </div>
+      <div>
+        <label class="font-semibold">To</label>
+        <select id="toSelect" class="w-full p-2 border rounded"></select>
+      </div>
+    </div>
 
-<!-- ROUTE SELECTION -->
-<div class="grid grid-cols-2 gap-4">
-<select id="from" class="p-2 border rounded"></select>
-<select id="to" class="p-2 border rounded"></select>
-</div>
+    <hr class="my-4" />
 
-<hr class="my-4">
+    <!-- LOAD / EMPTY / ADV (editable) -->
+    <div class="grid grid-cols-3 gap-4 text-center my-3 font-semibold">
+      <div>
+        <label>Load KM</label>
+        <input id="loadKmInput" type="number"
+               class="text-center border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label>Empty KM</label>
+        <input id="emptyKmInput" type="number"
+               class="text-center border p-2 rounded w-full" />
+      </div>
+      <div>
+        <label>Advance ₹</label>
+        <input id="advInput" type="number"
+               class="text-center border p-2 rounded w-full" />
+      </div>
+    </div>
 
-<!-- NOW LOAD / EMPTY / ADV = EDITABLE -->
-<div class="grid grid-cols-3 gap-4 text-center my-3 font-semibold">
-<div>
-<label>Load KM</label>
-<input id="loadKM" class="text-center border p-2 rounded w-full" type="number">
-</div>
-<div>
-<label>Empty KM</label>
-<input id="emptyKM" class="text-center border p-2 rounded w-full" type="number">
-</div>
-<div>
-<label>Advance ₹</label>
-<input id="advAmt" class="text-center border p-2 rounded w-full" type="number">
-</div>
-</div>
+    <hr class="my-4" />
 
-<hr class="my-4">
+    <!-- MAIN INPUTS -->
+    <div class="grid grid-cols-2 gap-4">
+      <input id="qtyInput"   type="number" placeholder="Qty MT"       class="p-2 border rounded" />
+      <input id="rateInput"  type="number" placeholder="Rate ₹/MT"    class="p-2 border rounded" />
+      <input id="commInput"  type="number" placeholder="Commission %" class="p-2 border rounded" value="5" />
+      <input id="mamulInput" type="number" placeholder="Mamul ₹"      class="p-2 border rounded" value="300" />
+      <input id="overInput"  type="number" placeholder="Overload ₹"   class="p-2 border rounded" value="0" />
+      <input id="tollInput"  type="number" placeholder="Toll Tax ₹"   class="p-2 border rounded" value="0" />
+    </div>
 
-<!-- INPUTS -->
-<div class="grid grid-cols-2 gap-4">
-<input id="qty" type="number" placeholder="Qty MT" class="p-2 border rounded">
-<input id="rate" type="number" placeholder="Rate ₹/MT" class="p-2 border rounded">
-<input id="comm" type="number" placeholder="Commission %" value="5" class="p-2 border rounded">
-<input id="mamul" type="number" placeholder="Mamul ₹" value="300" class="p-2 border rounded">
-<input id="over" type="number" placeholder="Overload ₹" value="0" class="p-2 border rounded">
-<input id="toll" type="number" placeholder="Toll Tax ₹" value="0" class="p-2 border rounded">
-</div>
+    <button id="calcBtn"
+            class="mt-5 w-full bg-black text-white font-bold p-3 rounded-lg text-lg">
+      CALCULATE
+    </button>
 
-<button id="calculate" class="mt-5 w-full bg-black text-white font-bold p-3 rounded-lg">CALCULATE</button>
+    <!-- OUTPUT -->
+    <div id="outputBox" class="hidden text-lg mt-6 font-semibold">
+      <hr class="mb-3" />
+      <p>Freight: <span id="outFreight"></span></p>
+      <p>Commission: <span id="outComm"></span></p>
+      <p>Mamul: <span id="outMamul"></span></p>
+      <p>Net Freight: <span id="outNet"></span></p>
+      <br />
+      <p>Total Trip Expense: <span id="outExp"></span></p>
+      <p class="text-green-600 text-xl">Savings: <span id="outSave"></span></p>
+      <hr class="mt-4" />
+    </div>
+  </div>
 
-<!-- RESULT SECTION -->
-<div id="output" class="hidden text-lg mt-6 font-semibold">
-<hr>
-<p>Freight: <span id="outFreight"></span></p>
-<p>Commission: <span id="outComm"></span></p>
-<p>Mamul: <span id="outMamul"></span></p>
-<p>Net Freight: <span id="outNet"></span></p>
-<br>
-<p>Total Trip Expense: <span id="outExp"></span></p>
-<p class="text-green-600 text-xl">Savings: <span id="outSave"></span></p>
-<hr>
-</div>
+  <script>
+    // -------- ROUTE MASTER (Hazira routes) ----------
+    const ROUTES = [
+      {from:"Hazira",to:"Taloja",      load:350, empty:100, adv:21000},
+      {from:"Hazira",to:"Kalamboli",   load:350, empty:100, adv:21000},
+      {from:"Hazira",to:"Panvel",      load:350, empty:100, adv:21000},
+      {from:"Hazira",to:"Thane",       load:350, empty:100, adv:21000},
+      {from:"Hazira",to:"Khopoli",     load:370, empty:50,  adv:21400},
+      {from:"Hazira",to:"Khalapur",    load:370, empty:50,  adv:21400},
+      {from:"Hazira",to:"Ahemdabad",   load:300, empty:0,   adv:15080},
+      {from:"Hazira",to:"Bavla",       load:300, empty:0,   adv:15080},
+      {from:"Hazira",to:"Vatva",       load:300, empty:0,   adv:15080},
+      {from:"Hazira",to:"Changodar",   load:300, empty:0,   adv:15080},
+      {from:"Hazira",to:"Khatrej",     load:330, empty:0,   adv:16430},
+      {from:"Hazira",to:"Sanand",      load:330, empty:0,   adv:16430},
+      {from:"Hazira",to:"Kalol",       load:330, empty:0,   adv:16430},
+      {from:"Hazira",to:"Chhatral",    load:330, empty:0,   adv:16430},
+      {from:"Hazira",to:"Gandhinagar", load:330, empty:0,   adv:16430},
+      {from:"Hazira",to:"Mehsana",     load:380, empty:0,   adv:18500},
+      {from:"Hazira",to:"Vithalapur",  load:380, empty:0,   adv:19400},
+      {from:"Hazira",to:"Vadodara",    load:210, empty:210, adv:15780},
+      {from:"Hazira",to:"Savli",       load:210, empty:210, adv:15780},
+      {from:"Hazira",to:"Por",         load:210, empty:210, adv:15780},
+      {from:"Hazira",to:"Kheda",       load:280, empty:0,   adv:13770},
+      {from:"Hazira",to:"Halol",       load:230, empty:230, adv:16830},
+      {from:"Hazira",to:"Vadindar",    load:625, empty:0,   adv:30300}
+    ];
 
-</div>
+    // -------- DOM ELEMENTS ----------
+    const fromSelect   = document.getElementById('fromSelect');
+    const toSelect     = document.getElementById('toSelect');
+    const loadKmInput  = document.getElementById('loadKmInput');
+    const emptyKmInput = document.getElementById('emptyKmInput');
+    const advInput     = document.getElementById('advInput');
 
-<script>
+    const qtyInput     = document.getElementById('qtyInput');
+    const rateInput    = document.getElementById('rateInput');
+    const commInput    = document.getElementById('commInput');
+    const mamulInput   = document.getElementById('mamulInput');
+    const overInput    = document.getElementById('overInput');
+    const tollInput    = document.getElementById('tollInput');
 
-/* ================= ROUTE MASTER ================= */
-const ROUTES = [
- {from:"Hazira",to:"Taloja",load:350,empty:100,adv:21000},
- {from:"Hazira",to:"Kalamboli",load:350,empty:100,adv:21000},
- {from:"Hazira",to:"Panvel",load:350,empty:100,adv:21000},
- {from:"Hazira",to:"Thane",load:350,empty:100,adv:21000},
- {from:"Hazira",to:"Khopoli",load:370,empty:50,adv:21400},
- {from:"Hazira",to:"Khalapur",load:370,empty:50,adv:21400},
- {from:"Hazira",to:"Ahemdabad",load:300,empty:0,adv:15080},
- {from:"Hazira",to:"Bavla",load:300,empty:0,adv:15080},
- {from:"Hazira",to:"Vatva",load:300,empty:0,adv:15080},
- {from:"Hazira",to:"Changodar",load:300,empty:0,adv:15080},
- {from:"Hazira",to:"Khatrej",load:330,empty:0,adv:16430},
- {from:"Hazira",to:"Sanand",load:330,empty:0,adv:16430},
- {from:"Hazira",to:"Kalol",load:330,empty:0,adv:16430},
- {from:"Hazira",to:"Chhatral",load:330,empty:0,adv:16430},
- {from:"Hazira",to:"Gandhinagar",load:330,empty:0,adv:16430},
- {from:"Hazira",to:"Mehsana",load:380,empty:0,adv:18500},
- {from:"Hazira",to:"Vithalapur",load:380,empty:0,adv:19400},
- {from:"Hazira",to:"Vadodara",load:210,empty:210,adv:15780},
- {from:"Hazira",to:"Savli",load:210,empty:210,adv:15780},
- {from:"Hazira",to:"Por",load:210,empty:210,adv:15780},
- {from:"Hazira",to:"Kheda",load:280,empty:0,adv:13770},
- {from:"Hazira",to:"Halol",load:230,empty:230,adv:16830},
- {from:"Hazira",to:"Vadindar",load:625,empty:0,adv:30300}
-];
+    const calcBtn      = document.getElementById('calcBtn');
+    const outputBox    = document.getElementById('outputBox');
 
-/* LOAD DROPDOWNS */
-function loadFrom(){
- from.innerHTML=`<option>Select</option>`;
- [...new Set(ROUTES.map(x=>x.from))].forEach(f=>from.innerHTML+=`<option>${f}</option>`);
-}
-from.onchange=()=>{
- to.innerHTML="<option>Select</option>"
- ROUTES.filter(x=>x.from==from.value).forEach(r=>to.innerHTML+=`<option>${r.to}</option>`)
-}
-to.onchange=()=>{
- let r=ROUTES.find(x=>x.from==from.value && x.to==to.value);
- if(r){
-   loadKM.value=r.load;
-   emptyKM.value=r.empty;
-   advAmt.value=r.adv; // editable bhi rahega
- }
-}
+    const outFreight   = document.getElementById('outFreight');
+    const outComm      = document.getElementById('outComm');
+    const outMamul     = document.getElementById('outMamul');
+    const outNet       = document.getElementById('outNet');
+    const outExp       = document.getElementById('outExp');
+    const outSave      = document.getElementById('outSave');
 
-/* CALCULATION */
-calculate.onclick=()=>{
- let qty=+qty.value, rate=+rate.value, mam=+mamul.value;
- let comm=+comm.value, over=+over.value, toll=+toll.value;
+    // -------- HELPERS ----------
+    function populateFrom() {
+      const fromList = [...new Set(ROUTES.map(r => r.from))];
+      fromSelect.innerHTML = '<option value="">Select</option>';
+      fromList.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f;
+        opt.textContent = f;
+        fromSelect.appendChild(opt);
+      });
+    }
 
- let freight=qty*rate;
- let commission=freight*comm/100;
- let net=freight-commission-mam;
- let exp=(+advAmt.value)+over+toll;
- let saving=net-exp;
+    function populateTo() {
+      const fromVal = fromSelect.value;
+      toSelect.innerHTML = '<option value="">Select</option>';
+      ROUTES.filter(r => r.from === fromVal).forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.to;
+        opt.textContent = r.to;
+        toSelect.appendChild(opt);
+      });
+    }
 
- outFreight.innerText="₹ "+freight.toFixed(0);
- outComm.innerText="₹ "+commission.toFixed(0);
- outMamul.innerText="₹ "+mam;
- outNet.innerText="₹ "+net.toFixed(0);
- outExp.innerText="₹ "+exp.toFixed(0);
- outSave.innerText="₹ "+saving.toFixed(0);
+    function autoFillRoute() {
+      const fromVal = fromSelect.value;
+      const toVal   = toSelect.value;
+      const route   = ROUTES.find(r => r.from === fromVal && r.to === toVal);
+      if (!route) return;
+      loadKmInput.value  = route.load;
+      emptyKmInput.value = route.empty;
+      advInput.value     = route.adv;
+    }
 
- output.classList.remove("hidden");
-}
+    // -------- CALCULATION ----------
+    function calculateTrip() {
+      const qty   = Number(qtyInput.value || 0);
+      const rate  = Number(rateInput.value || 0);
+      const commP = Number(commInput.value || 0);
+      const mamul = Number(mamulInput.value || 0);
+      const over  = Number(overInput.value || 0);
+      const toll  = Number(tollInput.value || 0);
+      const adv   = Number(advInput.value || 0); // editable advance
 
-loadFrom();
-</script>
+      if (!qty || !rate) {
+        alert('Qty aur Rate proper daaliye.');
+        return;
+      }
 
+      const freight   = qty * rate;
+      const commAmt   = freight * commP / 100;
+      const netFreight = freight - commAmt - mamul;
+      const expense   = adv + over + toll;
+      const saving    = netFreight - expense;
+
+      outFreight.textContent = "₹ " + freight.toFixed(0);
+      outComm.textContent    = "₹ " + commAmt.toFixed(0);
+      outMamul.textContent   = "₹ " + mamul.toFixed(0);
+      outNet.textContent     = "₹ " + netFreight.toFixed(0);
+      outExp.textContent     = "₹ " + expense.toFixed(0);
+      outSave.textContent    = "₹ " + saving.toFixed(0);
+
+      outputBox.classList.remove('hidden');
+    }
+
+    // -------- EVENT WIRING ----------
+    fromSelect.addEventListener('change', () => {
+      populateTo();
+      autoFillRoute();
+    });
+
+    toSelect.addEventListener('change', autoFillRoute);
+    calcBtn.addEventListener('click', calculateTrip);
+
+    // INIT
+    populateFrom();
+  </script>
 </body>
 </html>
