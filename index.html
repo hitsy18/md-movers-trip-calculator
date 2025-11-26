@@ -1,54 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MD MOVERS - TRIP CALCULATOR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex justify-center items-start p-6">
+
+<div class="w-full max-w-3xl bg-white shadow-xl rounded-xl p-6">
+
+<h2 class="text-xl font-bold mb-4 text-center">🚚 MD MOVERS – TRIP CALCULATOR</h2>
+
+<!-- Route Input -->
+<div class="grid grid-cols-2 gap-4">
+    <div>
+        <label>From</label>
+        <select id="from" class="w-full border p-2 rounded"></select>
+    </div>
+    <div>
+        <label>To</label>
+        <select id="to" class="w-full border p-2 rounded"></select>
+    </div>
+</div>
+
+<!-- Route Details -->
+<div class="grid grid-cols-3 gap-4 text-center my-4 font-bold">
+    <div class="bg-gray-50 p-3 rounded">Load KM<br><span id="load">-</span></div>
+    <div class="bg-gray-50 p-3 rounded">Empty KM<br><span id="empty">-</span></div>
+    <div class="bg-gray-50 p-3 rounded">Advance ₹<br><span id="adv">-</span></div>
+</div>
+
+<hr class="my-4">
+
+<!-- Input Section -->
+<div class="grid grid-cols-2 gap-4">
+    <input id="qty" type="number" class="border p-2 rounded" placeholder="Qty (MT)">
+    <input id="rate" type="number" class="border p-2 rounded" placeholder="Rate ₹/MT">
+    <input id="comm" type="number" value="5" class="border p-2 rounded" placeholder="Commission %">
+    <input id="mamul" type="number" value="300" class="border p-2 rounded" placeholder="Mamul ₹">
+    <input id="over" type="number" value="0" class="border p-2 rounded" placeholder="Overload ₹">
+    <input id="toll" type="number" value="0" class="border p-2 rounded" placeholder="Toll Tax ₹">
+</div>
+
+<button onclick="calc()" class="mt-5 w-full bg-black text-white p-3 rounded text-lg font-semibold">CALCULATE</button>
+
+<!-- OUTPUT -->
+<div id="result" class="mt-6 text-lg font-semibold space-y-1 hidden">
+
+<p>Freight: <span id="freight"></span></p>
+<p>Comm ₹: <span id="commRs"></span></p>
+<p>Mamul ₹: <span id="mamulRs"></span></p>
+<p>Net Freight: <span id="net"></span></p>
+<hr>
+<p>Trip Expense: <span id="exp"></span></p>
+<p class="text-green-600 text-xl">Savings: <span id="save"></span></p>
+
+</div>
+
+</div>
+
 <script>
+/* ================= ROUTE MASTER ================ */
 const routes=[
  {from:"Hazira",to:"Kalamboli",load:350,empty:100,adv:21000},
  {from:"Hazira",to:"Bhiwandi",load:320,empty:120,adv:20500},
+ {from:"Hazira",to:"Thane",load:340,empty:90,adv:20800},
 ];
 
-function loadFrom(){
- let s=document.getElementById("fromSelect");
- s.innerHTML="<option value=''>Select</option>";
- [...new Set(routes.map(x=>x.from))].forEach(f=>s.innerHTML+=`<option>${f}</option>`);
+/* Load Dropdowns */
+function init(){
+ let f=[...new Set(routes.map(r=>r.from))];
+ from.innerHTML="<option value=''>Select</option>";
+ f.forEach(v=>from.innerHTML+=`<option>${v}</option>`);
 }
 
-function loadTo(){
- let f=document.getElementById("fromSelect").value;
- let s=document.getElementById("toSelect");
- s.innerHTML="<option value=''>Select</option>";
- routes.filter(x=>x.from==f).forEach(r=>s.innerHTML+=`<option>${r.to}</option>`);
- updateInfo();
+from.onchange=()=>{
+ to.innerHTML="<option value=''>Select</option>";
+ routes.filter(r=>r.from==from.value).forEach(r=>to.innerHTML+=`<option>${r.to}</option>`);
 }
 
-function updateInfo(){
- let f=fromSelect.value, t=toSelect.value;
- let r=routes.find(x=>x.from==f && x.to==t);
- document.getElementById("loadKm").innerText=r?r.load:"-";
- document.getElementById("emptyKm").innerText=r?r.empty:"-";
- document.getElementById("advAmt").innerText=r?("₹ "+r.adv):"-";
+to.onchange=()=>{
+ let r=routes.find(r=>r.from==from.value && r.to==to.value);
+ if(!r) return;
+ load.textContent=r.load;
+ empty.textContent=r.empty;
+ adv.textContent="₹ "+r.adv;
 }
 
-document.getElementById("calcBtn").onclick=()=>{
- let f=fromSelect.value,t=toSelect.value;
- let r=routes.find(x=>x.from==f && x.to==t);
- if(!r){alert("❗ Route not found");return;}
+/* Calculation */
+function calc(){
+ let r=routes.find(r=>r.from==from.value && r.to==to.value);
+ if(!r){alert("Select Correct Route");return;}
 
- let qty=+qtyInput.value,rate=+rate.value,comm=+comm.value,mamul=+mamul.value;
+ let qty=+document.getElementById("qty").value;
+ let rate=+rate.value;
+ let comm=+comm.value;
+ let mamul=+mamul.value;
+ let over=+over.value;
+ let toll=+toll.value;
+
  let freight=qty*rate;
  let commRs=(freight*comm)/100;
  let net=freight-commRs-mamul;
-
- let exp=r.adv + (+overload.value) + (+toll.value);
+ let exp=r.adv+over+toll;
  let save=net-exp;
 
- document.getElementById("freight").innerText="₹ "+freight.toFixed(0);
- document.getElementById("commRs").innerText="₹ "+commRs.toFixed(0);
- document.getElementById("mamulRs").innerText="₹ "+mamul;
- document.getElementById("net").innerText="₹ "+net.toFixed(0);
+ freight.textContent="₹ "+freight.toFixed(0);
+ commRs.textContent="₹ "+commRs.toFixed(0);
+ mamulRs.textContent="₹ "+mamul;
+ net.textContent="₹ "+net.toFixed(0);
+ exp.textContent="₹ "+exp.toFixed(0);
+ save.textContent="₹ "+save.toFixed(0);
 
- document.getElementById("tripExp").innerText="₹ "+exp.toFixed(0);
- document.getElementById("save").innerText="₹ "+save.toFixed(0);
-};
+ result.hidden=false;
+}
 
-loadFrom();
-fromSelect.onchange=loadTo;
-toSelect.onchange=updateInfo;
+init();
 </script>
+
+</body>
+</html>
