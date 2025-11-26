@@ -1,419 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>MD MOVERS – TRIP CALCULATOR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>MD MOVERS – TRIP CALCULATOR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script type="module">
+
+/* █████ Firebase Setup █████ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAg2WhxP6f0qr0P5-p6VOvm4_n8CTKchBg",
+  authDomain: "md-movers-fleet.firebaseapp.com",
+  projectId: "md-movers-fleet",
+  storageBucket: "md-movers-fleet.firebasestorage.app",
+  messagingSenderId: "386416808558",
+  appId: "1:386416808558:web:8101db7f34a55848148c7f",
+  measurementId: "G-Y0ENN2HPTL"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* █████ ROUTE MASTER -- Editable & Expandable █████ */
+
+const routes = [
+  { from:"Hazira", to:"Taloja", loadKM:350, emptyKM:100, adv:21000 },
+  { from:"Hazira", to:"Kalamboli", loadKM:350, emptyKM:100, adv:21000 },
+  { from:"Hazira", to:"Panvel", loadKM:350, emptyKM:100, adv:21000 },
+  { from:"Hazira", to:"Thane", loadKM:350, emptyKM:100, adv:21000 },
+  { from:"Hazira", to:"Khopoli", loadKM:370, emptyKM:50, adv:21400 },
+  { from:"Hazira", to:"Khalapur", loadKM:370, emptyKM:50, adv:21400 },
+  { from:"Hazira", to:"Ahemdabad", loadKM:300, emptyKM:0, adv:15080 },
+  { from:"Hazira", to:"Bavla", loadKM:300, emptyKM:0, adv:15080 },
+  { from:"Hazira", to:"Vatva", loadKM:300, emptyKM:0, adv:15080 },
+  { from:"Hazira", to:"Changodar", loadKM:300, emptyKM:0, adv:15080 },
+  { from:"Hazira", to:"Khatrej", loadKM:330, emptyKM:0, adv:16430 },
+  { from:"Hazira", to:"Sanand", loadKM:330, emptyKM:0, adv:16430 },
+  { from:"Hazira", to:"Kalol", loadKM:330, emptyKM:0, adv:16430 },
+  { from:"Hazira", to:"Chhatral", loadKM:330, emptyKM:0, adv:16430 },
+  { from:"Hazira", to:"Gandhinagar", loadKM:330, emptyKM:0, adv:16430 },
+  { from:"Hazira", to:"Mehsana", loadKM:380, emptyKM:0, adv:18500 },
+  { from:"Hazira", to:"Vithalapur", loadKM:410, emptyKM:210, adv:19400 },
+  { from:"Hazira", to:"Vadodara", loadKM:210, emptyKM:0, adv:15780 },
+  { from:"Hazira", to:"Savli", loadKM:210, emptyKM:0, adv:15780 },
+  { from:"Hazira", to:"Por", loadKM:210, emptyKM:0, adv:15780 },
+  { from:"Hazira", to:"Kheda", loadKM:280, emptyKM:0, adv:13770 },
+  { from:"Hazira", to:"Halol", loadKM:230, emptyKM:230, adv:16830 },
+  { from:"Hazira", to:"Vadindar", loadKM:625, emptyKM:0, adv:30300 }
+];
+
+/* █████ On Select Auto-Fill █████ */
+
+function routeChange(){
+  let f=document.getElementById("from").value;
+  let t=document.getElementById("to").value;
+  let r=routes.find(v=>v.from===f && v.to===t);
+
+  if(r){
+     document.getElementById("loadKM").value=r.loadKM;
+     document.getElementById("emptyKM").value=r.emptyKM;
+     document.getElementById("advance").innerText="₹ "+r.adv;
+  }
+}
+
+/* █████ CALCULATE █████ */
+
+async function calculate(){
+  let qty=+qtyInp.value;
+  let rate=+rateInp.value;
+  let mamul=+mamulInp.value;
+  let comm=+commInp.value;
+  let load=+loadKM.value;
+  let empty=+emptyKM.value;
+
+  let loadAvg=+loadAvgInp.value;
+  let emptyAvg=+emptyAvgInp.value;
+  let dieselPrice=+dieselRate.value;
+
+  let freight=qty*rate;
+  let commission = freight*(comm/100);
+  let dieselUsed = (load/loadAvg)+(empty/emptyAvg);
+  let dieselCost = dieselUsed*dieselPrice;
+
+  let net = freight - commission - mamul - dieselCost;
+
+  result.innerHTML = `
+      Freight: ₹${freight} <br>
+      Diesel Used: ${dieselUsed.toFixed(2)} L <br>
+      Diesel Cost: ₹${dieselCost.toFixed(0)} <br>
+      Commission: ₹${commission.toFixed(0)} <br>
+      Mamul: ₹${mamul} <br>
+      <b>Net Saving: ₹${net.toFixed(0)}</b>
+  `;
+
+  await addDoc(collection(db,"trip-records"),{
+    from:from.value,to:to.value,load,empty,qty,rate,
+    dieselUsed,dieselCost,commission,mamul,net,
+    time:new Date()
+  });
+
+  alert("Trip Saved Successfully! 🚛💨");
+}
+
+window.calculate=calculate;
+window.routeChange=routeChange;
+
+</script>
 </head>
 
-<body class="bg-gray-100 py-6 flex justify-center">
-  <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6">
+<body class="bg-gray-100 p-6">
 
-    <h1 class="text-2xl font-bold text-center mb-6">🚛 MD MOVERS – TRIP CALCULATOR</h1>
+<h1 class="text-center text-3xl font-bold mb-6">🚛 MD MOVERS TRIP CALCULATOR</h1>
 
-    <!-- FROM / TO -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label class="text-sm font-semibold">From Location</label>
-        <select id="fromSel" class="border p-2 rounded w-full"></select>
-      </div>
-      <div>
-        <label class="text-sm font-semibold">To Location</label>
-        <select id="toSel" class="border p-2 rounded w-full"></select>
-      </div>
-    </div>
+<div class="grid grid-cols-2 gap-3 p-4 bg-white rounded shadow max-w-3xl mx-auto">
 
-    <hr class="my-4" />
+<select id="from" onchange="routeChange()" class="border p-2"><option>Hazira</option></select>
+<select id="to" onchange="routeChange()" class="border p-2">
+${routes.map(r=>`<option value="${r.to}">${r.to}</option>`).join("")}
+</select>
 
-    <!-- LOAD / EMPTY / ADV -->
-    <div class="grid grid-cols-3 gap-4 font-semibold text-center">
-      <div>
-        <label>Load KM</label>
-        <input id="loadKmInput" type="number"
-               class="border p-2 text-center w-full rounded" />
-      </div>
-      <div>
-        <label>Empty KM</label>
-        <input id="emptyKmInput" type="number"
-               class="border p-2 text-center w-full rounded" />
-      </div>
-      <div>
-        <label>Advance (Manual) ₹</label>
-        <input id="advInput" type="number"
-               class="border p-2 text-center w-full rounded" />
-      </div>
-    </div>
+<input id="loadKM" class="border p-2" placeholder="Load KM">
+<input id="emptyKM" class="border p-2" placeholder="Empty KM">
 
-    <hr class="my-4" />
+<input id="qtyInp" class="border p-2" placeholder="Qty (MT)">
+<input id="rateInp" class="border p-2" placeholder="Rate ₹">
 
-    <!-- FREIGHT / EXP INPUTS -->
-    <div class="grid grid-cols-2 gap-4">
+<input id="commInp" class="border p-2" placeholder="Commission %">
+<input id="mamulInp" class="border p-2" placeholder="Mamul ₹">
 
-      <div>
-        <label>Quantity (MT)</label>
-        <input id="qtyInput" type="number" placeholder="Qty MT"
-               class="p-2 border rounded w-full" />
-      </div>
+<input id="loadAvgInp" value="2.1" class="border p-2" placeholder="Load Avg">
+<input id="emptyAvgInp" value="4" class="border p-2" placeholder="Empty Avg">
 
-      <div>
-        <label>Rate (₹ / MT)</label>
-        <input id="rateInput" type="number" placeholder="Rate ₹/MT"
-               class="p-2 border rounded w-full" />
-      </div>
+<input id="dieselRate" value="92" class="border p-2" placeholder="Diesel Rate">
 
-      <div>
-        <label>Commission %</label>
-        <input id="commInput" type="number" value="5"
-               class="p-2 border rounded w-full" />
-      </div>
+<button onclick="calculate()" class="col-span-2 bg-black text-white py-3 rounded">CALCULATE & SAVE</button>
+</div>
 
-      <div>
-        <label>Mamul ₹</label>
-        <input id="mamulInput" type="number" value="300"
-               class="p-2 border rounded w-full" />
-      </div>
+<div id="result" class="mt-4 p-4 bg-white shadow text-lg font-semibold"></div>
 
-      <div>
-        <label>Overload Expense ₹</label>
-        <input id="overInput" type="number" value="0"
-               class="p-2 border rounded w-full" />
-      </div>
-
-      <div>
-        <label>Toll Tax ₹</label>
-        <input id="tollInput" type="number" value="0"
-               class="p-2 border rounded w-full" />
-      </div>
-
-      <div>
-        <label>Load Avg (KM / L)</label>
-        <input id="loadAvgInput" type="number" value="2.1"
-               class="p-2 border rounded w-full" />
-      </div>
-
-      <div>
-        <label>Empty Avg (KM / L)</label>
-        <input id="emptyAvgInput" type="number" value="4.0"
-               class="p-2 border rounded w-full" />
-      </div>
-
-      <div>
-        <label>Diesel Rate (₹ / L)</label>
-        <input id="dieselRateInput" type="number" value="92"
-               class="p-2 border rounded w-full" />
-      </div>
-
-      <div>
-        <label>Trip Type</label>
-        <select id="tripTypeSelect" class="p-2 border rounded w-full">
-          <option value="local">Local (100%)</option>
-          <option value="mid">Mid (105%)</option>
-          <option value="long">Long (110%)</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- BUTTONS -->
-    <div class="mt-6 flex flex-col sm:flex-row gap-3">
-      <button
-        id="calcBtn"
-        class="flex-1 bg-black text-white p-3 rounded-lg font-bold text-lg">
-        CALCULATE
-      </button>
-      <button
-        id="printBtn"
-        class="flex-1 bg-slate-800 text-white p-3 rounded-lg text-sm">
-        Print / Save PDF
-      </button>
-      <button
-        id="waBtn"
-        class="flex-1 bg-green-600 text-white p-3 rounded-lg text-sm">
-        Share on WhatsApp
-      </button>
-    </div>
-
-    <!-- RESULT -->
-    <div id="resultBox" class="hidden mt-6 text-sm sm:text-base font-semibold border-t pt-4" >
-
-      <h2 class="text-lg font-bold mb-2">Freight Summary</h2>
-      <p>Freight: <span id="outFreight"></span> ₹</p>
-      <p>Commission: <span id="outComm"></span> ₹</p>
-      <p>Mamul: <span id="outMamul"></span> ₹</p>
-      <p>Net Freight: <span id="outNet"></span> ₹</p>
-
-      <h2 class="text-lg font-bold mt-4 mb-2">Diesel & Expense</h2>
-      <p>Diesel Used + Cost: <span id="outDiesel"></span></p>
-      <p>Other Expense (Overload + Toll): <span id="outOtherExp"></span> ₹</p>
-      <p>Estimated Trip Expense (without buffer): <span id="outBaseExp"></span> ₹</p>
-
-      <h2 class="text-lg font-bold mt-4 mb-2">Advance Suggestion</h2>
-      <p>Trip Type: <span id="outTripType"></span></p>
-      <p>Suggested Advance (auto): <span id="outSugAdv"></span> ₹</p>
-      <p>Used Advance (manual or suggested): <span id="outUsedAdv"></span> ₹</p>
-
-      <h2 class="text-lg font-bold mt-4 mb-2">Profitability</h2>
-      <p>Saving vs Estimated Expense: <span id="outSaveEst"></span> ₹</p>
-      <p>Saving vs Advance: <span id="outSaveAdv"></span> ₹</p>
-      <p>Saving per MT (vs Advance): <span id="outSavePerMt"></span> ₹/MT</p>
-      <p>Indicator:
-        <span id="outIndicator" class="px-2 py-1 rounded text-white text-xs"></span>
-      </p>
-    </div>
-  </div>
-
-  <script>
-    // ---------------- ROUTE MASTER DATA ----------------
-    const ROUTES = [
-      { from: "Hazira", to: "Taloja",     load: 350, empty: 100, adv: 21000 },
-      { from: "Hazira", to: "Kalamboli",  load: 350, empty: 100, adv: 21000 },
-      { from: "Hazira", to: "Panvel",     load: 350, empty: 100, adv: 21000 },
-      { from: "Hazira", to: "Thane",      load: 350, empty: 100, adv: 21000 },
-      { from: "Hazira", to: "Khopoli",    load: 370, empty: 50,  adv: 21400 },
-      { from: "Hazira", to: "Khalapur",   load: 370, empty: 50,  adv: 21400 },
-      { from: "Hazira", to: "Ahemdabad",  load: 300, empty: 0,   adv: 15080 },
-      { from: "Hazira", to: "Bavla",      load: 300, empty: 0,   adv: 15080 },
-      { from: "Hazira", to: "Vatva",      load: 300, empty: 0,   adv: 15080 },
-      { from: "Hazira", to: "Changodar",  load: 300, empty: 0,   adv: 15080 },
-      { from: "Hazira", to: "Khatrej",    load: 330, empty: 0,   adv: 16430 },
-      { from: "Hazira", to: "Sanand",     load: 330, empty: 0,   adv: 16430 },
-      { from: "Hazira", to: "Kalol",      load: 330, empty: 0,   adv: 16430 },
-      { from: "Hazira", to: "Chhatral",   load: 330, empty: 0,   adv: 16430 },
-      { from: "Hazira", to: "Gandhinagar",load: 330, empty: 0,   adv: 16430 },
-      { from: "Hazira", to: "Mehsana",    load: 380, empty: 0,   adv: 18500 },
-      { from: "Hazira", to: "Vithalapur", load: 380, empty: 0,   adv: 19400 },
-      { from: "Hazira", to: "Vadodara",   load: 210, empty: 210, adv: 15780 },
-      { from: "Hazira", to: "Savli",      load: 210, empty: 210, adv: 15780 },
-      { from: "Hazira", to: "Por",        load: 210, empty: 210, adv: 15780 },
-      { from: "Hazira", to: "Kheda",      load: 280, empty: 0,   adv: 13770 },
-      { from: "Hazira", to: "Halol",      load: 230, empty: 230, adv: 16830 },
-      { from: "Hazira", to: "Vadindar",   load: 625, empty: 0,   adv: 30300 }
-    ];
-
-    // --------------- ELEMENT REFERENCES ---------------
-    const fromSel         = document.getElementById('fromSel');
-    const toSel           = document.getElementById('toSel');
-    const loadKmInput     = document.getElementById('loadKmInput');
-    const emptyKmInput    = document.getElementById('emptyKmInput');
-    const advInput        = document.getElementById('advInput');
-
-    const qtyInput        = document.getElementById('qtyInput');
-    const rateInput       = document.getElementById('rateInput');
-    const commInput       = document.getElementById('commInput');
-    const mamulInput      = document.getElementById('mamulInput');
-    const overInput       = document.getElementById('overInput');
-    const tollInput       = document.getElementById('tollInput');
-
-    const loadAvgInput    = document.getElementById('loadAvgInput');
-    const emptyAvgInput   = document.getElementById('emptyAvgInput');
-    const dieselRateInput = document.getElementById('dieselRateInput');
-    const tripTypeSelect  = document.getElementById('tripTypeSelect');
-
-    const calcBtn         = document.getElementById('calcBtn');
-    const printBtn        = document.getElementById('printBtn');
-    const waBtn           = document.getElementById('waBtn');
-    const resultBox       = document.getElementById('resultBox');
-
-    const outFreight      = document.getElementById('outFreight');
-    const outComm         = document.getElementById('outComm');
-    const outMamul        = document.getElementById('outMamul');
-    const outNet          = document.getElementById('outNet');
-    const outDiesel       = document.getElementById('outDiesel');
-    const outOtherExp     = document.getElementById('outOtherExp');
-    const outBaseExp      = document.getElementById('outBaseExp');
-    const outTripType     = document.getElementById('outTripType');
-    const outSugAdv       = document.getElementById('outSugAdv');
-    const outUsedAdv      = document.getElementById('outUsedAdv');
-    const outSaveEst      = document.getElementById('outSaveEst');
-    const outSaveAdv      = document.getElementById('outSaveAdv');
-    const outSavePerMt    = document.getElementById('outSavePerMt');
-    const outIndicator    = document.getElementById('outIndicator');
-
-    // --------------- POPULATE DROPDOWNS ---------------
-    function populateFrom() {
-      const fromList = [...new Set(ROUTES.map(r => r.from))];
-      fromSel.innerHTML = '<option value="">Select</option>';
-      fromList.forEach(f => {
-        const opt = document.createElement('option');
-        opt.value = f;
-        opt.textContent = f;
-        fromSel.appendChild(opt);
-      });
-    }
-
-    function populateTo() {
-      const fromVal = fromSel.value;
-      toSel.innerHTML = '<option value="">Select</option>';
-      ROUTES.filter(r => r.from === fromVal).forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r.to;
-        opt.textContent = r.to;
-        toSel.appendChild(opt);
-      });
-    }
-
-    function autoFillRoute() {
-      const fromVal = fromSel.value;
-      const toVal   = toSel.value;
-      const route   = ROUTES.find(r => r.from === fromVal && r.to === toVal);
-      if (!route) return;
-
-      loadKmInput.value  = route.load;
-      emptyKmInput.value = route.empty;
-      advInput.value     = route.adv;   // default master adv (can be overwritten)
-
-      if (!loadAvgInput.value)  loadAvgInput.value  = 2.1;
-      if (!emptyAvgInput.value) emptyAvgInput.value = 4.0;
-    }
-
-    // --------------- BUFFER BASED ON TRIP TYPE ---------------
-    function getTripBuffer() {
-      const t = tripTypeSelect.value;
-      if (t === 'mid')  return 1.05;
-      if (t === 'long') return 1.10;
-      return 1.00; // local
-    }
-
-    function getTripTypeLabel() {
-      const t = tripTypeSelect.value;
-      if (t === 'mid')  return "MID (105%)";
-      if (t === 'long') return "LONG (110%)";
-      return "LOCAL (100%)";
-    }
-
-    // --------------- CALCULATION ENGINE ---------------
-    function calculateTrip() {
-      const qty        = parseFloat(qtyInput.value || '0');
-      const rate       = parseFloat(rateInput.value || '0');
-      const commPct    = parseFloat(commInput.value || '0');
-      const mamul      = parseFloat(mamulInput.value || '0');
-      const over       = parseFloat(overInput.value || '0');
-      const toll       = parseFloat(tollInput.value || '0');
-
-      const loadKm     = parseFloat(loadKmInput.value || '0');
-      const emptyKm    = parseFloat(emptyKmInput.value || '0');
-      const loadAvg    = parseFloat(loadAvgInput.value || '0');
-      const emptyAvg   = parseFloat(emptyAvgInput.value || '0');
-      const dieselRate = parseFloat(dieselRateInput.value || '0');
-
-      if (!qty || !rate) {
-        alert("Qty aur Rate proper dalo.");
-        return;
-      }
-
-      // FREIGHT SIDE
-      const freight    = qty * rate;
-      const commAmt    = freight * commPct / 100;
-      const netFreight = freight - commAmt - mamul;
-
-      // DIESEL SIDE
-      const loadDiesel  = loadAvg  > 0 ? (loadKm  / loadAvg)  : 0;
-      const emptyDiesel = emptyAvg > 0 ? (emptyKm / emptyAvg) : 0;
-      const totalDiesel = loadDiesel + emptyDiesel;
-      const dieselCost  = totalDiesel * dieselRate;
-
-      // OTHER EXPENSE
-      const otherExp    = over + toll;
-
-      // BASE EXPENSE (without buffer)
-      const baseExp     = dieselCost + otherExp;
-
-      // SUGGESTED ADVANCE
-      const buffer      = getTripBuffer();
-      const sugAdv      = baseExp * buffer;
-
-      // USED ADVANCE (if manual given, else suggested)
-      let usedAdv = sugAdv;
-      const manualAdv = parseFloat(advInput.value || '0');
-      if (manualAdv > 0) {
-        usedAdv = manualAdv;
-      }
-
-      // SAVINGS
-      const saveEst = netFreight - baseExp;
-      const saveAdv = netFreight - usedAdv;
-      const savePerMt = qty > 0 ? saveAdv / qty : 0;
-
-      // PROFIT INDICATOR
-      let indicatorText = "";
-      let indicatorClass = "";
-      if (savePerMt > 250) {
-        indicatorText = "GOOD RUN";
-        indicatorClass = "bg-green-600";
-      } else if (savePerMt >= 100) {
-        indicatorText = "NORMAL";
-        indicatorClass = "bg-yellow-500";
-      } else {
-        indicatorText = "RISK / LOW MARGIN";
-        indicatorClass = "bg-red-600";
-      }
-
-      // UPDATE UI
-      outFreight.textContent   = freight.toFixed(0);
-      outComm.textContent      = commAmt.toFixed(0);
-      outMamul.textContent     = mamul.toFixed(0);
-      outNet.textContent       = netFreight.toFixed(0);
-
-      outDiesel.textContent    =
-        `${totalDiesel.toFixed(1)} Ltr (₹${dieselCost.toFixed(0)})`;
-      outOtherExp.textContent  = otherExp.toFixed(0);
-      outBaseExp.textContent   = baseExp.toFixed(0);
-
-      outTripType.textContent  = getTripTypeLabel();
-      outSugAdv.textContent    = sugAdv.toFixed(0);
-      outUsedAdv.textContent   = usedAdv.toFixed(0);
-
-      outSaveEst.textContent   = saveEst.toFixed(0);
-      outSaveAdv.textContent   = saveAdv.toFixed(0);
-      outSavePerMt.textContent = savePerMt.toFixed(0);
-
-      outIndicator.textContent = indicatorText;
-      outIndicator.className =
-        "px-2 py-1 rounded text-white text-xs " + indicatorClass;
-
-      resultBox.classList.remove('hidden');
-    }
-
-    // --------------- PDF / PRINT ---------------
-    function printSlip() {
-      window.print(); // browser ka print → user PDF save kar sakta
-    }
-
-    // --------------- WHATSAPP SHARE ---------------
-    function shareWhatsApp() {
-      const from = fromSel.value || "";
-      const to   = toSel.value || "";
-      const msgLines = [
-        `MD MOVERS TRIP SLIP`,
-        `Route: ${from} → ${to}`,
-        `Qty/Rate: ${qtyInput.value} MT × ₹${rateInput.value}`,
-        `Freight: ₹${outFreight.textContent}`,
-        `Net Freight: ₹${outNet.textContent}`,
-        `Diesel: ${outDiesel.textContent}`,
-        `Sug. Advance: ₹${outSugAdv.textContent}`,
-        `Used Advance: ₹${outUsedAdv.textContent}`,
-        `Saving vs Adv: ₹${outSaveAdv.textContent}`,
-        `Per MT: ₹${outSavePerMt.textContent}`,
-        `Status: ${outIndicator.textContent}`
-      ];
-      const msg = encodeURIComponent(msgLines.join("\n"));
-      const url = "https://wa.me/?text=" + msg;
-      window.open(url, "_blank");
-    }
-
-    // --------------- EVENT WIRING ---------------
-    fromSel.addEventListener('change', () => {
-      populateTo();
-      autoFillRoute();
-    });
-
-    toSel.addEventListener('change', autoFillRoute);
-    calcBtn.addEventListener('click', calculateTrip);
-    printBtn.addEventListener('click', printSlip);
-    waBtn.addEventListener('click', shareWhatsApp);
-
-    // INIT
-    populateFrom();
-  </script>
 </body>
 </html>
