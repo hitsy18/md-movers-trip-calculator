@@ -9,26 +9,51 @@
 body{background:#eef1f4;margin:0;text-align:center;font-family:Arial;}
 .container{width:92%;max-width:600px;margin:35px auto;background:white;padding:30px;
 border-radius:10px;box-shadow:0 0 12px rgba(0,0,0,0.15);}
-input,select{width:100%;padding:13px;margin-top:10px;border-radius:6px;border:1px solid #bbb;font-size:15px;}
-.btn{width:100%;padding:14px;font-size:17px;border:none;border-radius:6px;font-weight:bold;color:white;margin-top:12px;cursor:pointer;}
+
+input,select{
+ width:100%;padding:12px;margin-top:10px;
+ border-radius:6px;border:1px solid #bbb;font-size:15px;
+}
+.btn{
+ width:100%;padding:14px;font-size:17px;border:none;border-radius:6px;
+ font-weight:bold;color:white;margin-top:12px;cursor:pointer;
+}
 .calc{background:#000;}
 .wa{background:#007a35;}
 .pdf{background:#1b2735;}
 
-#result {display:none;margin-top:20px;text-align:left;background:#fff;padding:22px;border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.18);border-left:6px solid #09b412;font-size:17px;line-height:26px;}
-#result b{font-size:20px;color:#078c0f;}
+#resultBox{
+ display:none;margin-top:25px;padding:18px;border-radius:10px;
+ background:#ffffff;box-shadow:0 0 10px rgba(0,0,0,0.25);
+}
+
+.resultGrid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+ text-align:left;
+ font-size:16px;
+}
+.resultGrid div{
+ background:#f4f4f4;padding:12px;border-radius:8px;font-weight:bold;
+}
+.resultProfit{
+ grid-column:1/3;
+ background:#0ead25 !important;
+ color:#fff !important;
+ font-size:20px;text-align:center;
+}
 </style>
 </head>
 <body>
 
-<img src="logo.png" width="120" style="margin-top:18px">
-<h2 style="letter-spacing:1px;">TRIP CALCULATOR</h2>
+<img src="logo.png" width="110">
+<h2>TRIP CALCULATOR</h2>
 
 <div class="container">
 
-<select id="start"><option>Hazira</option><option>Taloja</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option><option>Ahmedabad</option></select>
-<select id="end"><option>Taloja</option><option>Hazira</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option><option>Ahmedabad</option></select>
+<select id="start"><option>Hazira</option><option>Taloja</option><option>Panvel</option></select>
+<select id="end"><option>Taloja</option><option>Hazira</option><option>Panvel</option></select>
 
 <input id="loadkm" placeholder="Load KM">
 <input id="emptykm" placeholder="Empty KM">
@@ -45,44 +70,43 @@ box-shadow:0 0 10px rgba(0,0,0,0.18);border-left:6px solid #09b412;font-size:17p
 <button class="btn wa" onclick="shareWA()">WhatsApp Share</button>
 <button class="btn pdf" onclick="window.print()">Print / Save PDF</button>
 
-<!-- 🟢 RESULT SHOW BELOW -->
-<div id="result"></div>
+<!-- RESULT BOX HERE -->
+<div id="resultBox">
+ <div class="resultGrid" id="output"></div>
+</div>
 
 </div>
 
 <script>
 function calculate(){
-    let l = +loadkm.value, e = +emptykm.value, q = +qty.value, r = +rate.value,
-        la= +loadavg.value, ea= +emptyavg.value, d = +diesel.value,
-        c = +commission.value, m = +mamul.value, o = +other.value;
+ let L=+loadkm.value,E=+emptykm.value,Q=+qty.value,R=+rate.value,
+     LA=+loadavg.value,EA=+emptyavg.value,D=+diesel.value,
+     C=+commission.value,M=+mamul.value,O=+other.value;
 
-    if(!l||!q||!r||!la||!ea||!d){ alert("⚠ Required fields missing"); return;}
+ if(!L||!Q||!R||!LA||!EA||!D){alert("⚠ Required fields missing");return;}
 
-    let freight=q*r,
-        fl=(l/la).toFixed(2),
-        fe=(e/ea).toFixed(2),
-        fuel=(+fl + +fe).toFixed(2),
-        cost=(fuel*d).toFixed(0),
-        exp=+cost + +c + +m + +o,
-        profit=freight-exp;
+ let freight=Q*R,
+ fuelUsed=((L/LA)+(E/EA)).toFixed(2),
+ dieselCost=(fuelUsed*D).toFixed(0),
+ totalExp=+dieselCost + C + M + O,
+ profit=freight-totalExp;
 
-    document.getElementById("result").style.display="block";
-    document.getElementById("result").innerHTML=
-    `<b>₹ ${profit}</b> Profit<br><hr>
-    📍 Route: ${start.value} → ${end.value}<br>
-    🚛 Freight: ₹${freight}<br>
-    ⛽ Fuel Used: ${fuel} L<br>
-    💸 Diesel Cost: ₹${cost}<br>
-    🧾 Commission: ₹${c}<br>
-    📄 Mamul: ₹${m}<br>
-    💳 Other: ₹${o}<br>`;
+ document.getElementById("resultBox").style.display="block";
+ document.getElementById("output").innerHTML=`
+  <div>Freight ₹${freight}</div>
+  <div>Fuel Used ${fuelUsed} L</div>
+  <div>Diesel Cost ₹${dieselCost}</div>
+  <div>Other Exp ₹${O}</div>
+  <div>Commission ₹${C}</div>
+  <div>Mamul ₹${M}</div>
+  <div class="resultProfit">PROFIT ₹${profit}</div>
+ `;
 }
 
 function shareWA(){
-    let msg = document.getElementById("result").innerText.replace(/\n/g,"%0A");
-    window.open("https://wa.me/?text="+msg,"_blank");
+ let text=document.getElementById("output").innerText.replace(/\n/g,"%0A");
+ window.open("https://wa.me/?text="+text,"_blank");
 }
 </script>
-
 </body>
 </html>
