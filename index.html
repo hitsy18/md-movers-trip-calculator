@@ -2,110 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trip Advance Calculator</title>
-
+<title>Trip Calculator - MD Movers</title>
 <style>
-    body{font-family:Arial;background:#f2f4f7;margin:0;text-align:center;}
-    .box{width:78%;background:#fff;margin:auto;padding:20px 20px;border-radius:10px;margin-top:18px;}
-    input,select{width:95%;padding:10px;margin:6px;border-radius:5px;border:1px solid #bbb;}
-    .row{display:flex;gap:15px;width:100%;justify-content:center}
-    .row div{width:50%}
-    button{width:100%;padding:13px;margin-top:8px;color:#fff;font-size:15px;border:none;border-radius:5px;cursor:pointer;}
-    #result{background:#dff9d8;padding:20px;margin-top:15px;border-radius:10px;display:none;text-align:left;font-size:17px;}
-    #wbtn{background:#006c2f;}  #calc{background:#000;}
-    #pdf{background:#1e2a39;}
+body {font-family: Arial;background:#eef2f7;margin:0;text-align:center;}
+.container {width:80%;margin:auto;margin-top:30px;padding:30px;background:white;border-radius:10px;
+box-shadow:0 0 15px rgba(0,0,0,0.1);}
+.logo {width:110px;margin-bottom:5px;}
+h2 {margin-top:0;color:#111;font-size:23px;font-weight:900}
+
+.row{display:flex;gap:20px;width:100%;margin-bottom:10px;}
+.row div{flex:1;text-align:left;}
+input,select{width:100%;padding:10px;border:1px solid #444;border-radius:6px;font-size:15px;margin-top:6px}
+
+button{width:100%;padding:14px;font-size:17px;border:none;border-radius:6px;color:white;margin-top:10px;cursor:pointer;}
+.calc{background:black;} .calc:hover{background:#222}
+.whatsapp{background:#006A21;} .whatsapp:hover{background:#035e1e}
+.pdf{background:#1d2a3c;} .pdf:hover{background:#131d29}
+
+#resultBox{
+margin-top:25px;background:#f9f9f9;padding:18px;border-left:6px solid green;
+text-align:left;font-size:16px;line-height:25px;display:none;border-radius:6px;
+}
 </style>
 </head>
-
 <body>
 
-<img src="logo.png" width="120"><br>
+<img src="logo.png" class="logo">
 <h2>TRIP CALCULATOR</h2>
 
-<div class="box">
+<div class="container">
 
-    <!-- From & To -->
-    <div class="row">
-        <div><label>FROM</label><select id="from"><option>Hazira</option></select></div>
-        <div><label>TO</label><select id="to"><option>Taloja</option></select></div>
-    </div>
+<!-- SELECTION -->
+<div class="row">
+<div>
+<label>FROM</label><select id="from">
+<option>Hazira</option><option>Sanand</option><option>Taloja</option>
+</select></div>
 
-    <!-- KM SECTION -->
-    <div class="row">
-        <div><label>UPWARD KM</label><input id="upkm"></div>
-        <div><label>RETURN KM</label><input id="rtkm"></div>
-    </div>
+<div>
+<label>TO</label><select id="to">
+<option>Hazira</option><option>Sanand</option><option>Taloja</option>
+</select></div>
+</div>
 
-    <!-- Qty & Rate -->
-    <div class="row">
-        <div><label>LOAD QTY (MT)</label><input id="qty"></div>
-        <div><label>RATE ₹/MT</label><input id="rate"></div>
-    </div>
+<!-- KM SIDE BY SIDE -->
+<div class="row">
+<div><label>Upward KM</label><input id="up" type="number"></div>
+<div><label>Return KM</label><input id="ret" type="number"></div>
+</div>
 
-    <!-- Avg -->
-    <div class="row">
-        <div><label>Loaded Avg KM/L</label><input id="lavg"></div>
-        <div><label>Empty Avg KM/L</label><input id="eavg"></div>
-    </div>
+<!-- LOADING -->
+<div class="row">
+<div><label>Load Qty (MT)</label><input id="qty" type="number"></div>
+<div><label>Rate ₹/MT</label><input id="rmt" type="number"></div>
+</div>
 
-    <!-- Diesel -->
-    <div class="row">
-        <div><label>Diesel Price ₹/L</label><input id="dprice"></div>
-        <div><label>Commission ₹</label><input id="comm"></div>
-    </div>
+<!-- AVERAGE -->
+<div class="row">
+<div><label>Loaded Avg KM/L</label><input id="lav" type="number"></div>
+<div><label>Empty Avg KM/L</label><input id="eav" type="number"></div>
+</div>
 
-    <!-- Auto + Editable -->
-    <div class="row">
-        <div><label>Mamul ₹</label><input id="mamul"></div>
-        <div><label>Other Expenses ₹</label><input id="oth"></div>
-    </div><br>
+<!-- DIESEL / COMMISSION / MAMUL -->
+<div class="row">
+<div><label>Diesel Price ₹/L</label><input id="dprice" type="number"></div>
+<div><label>Commission ₹</label><input id="com" type="number" value="0"></div>
+</div>
 
-    <!-- ACTION -->
-    <button id="calc" onclick="calculate()">🚚 CALCULATE</button>
-    <button id="wbtn">WhatsApp Share</button>
-    <button id="pdf">Print / Save PDF</button>
+<div class="row">
+<div><label>Mamul ₹</label><input id="mam" type="number" value="0"></div>
+<div><label>Other Expenses ₹</label><input id="oth" type="number" value="0"></div>
+</div>
 
-    <!-- RESULT -->
-    <div id="result"></div>
+<!-- INCENTIVE + SAVING -->
+<div class="row">
+<div><label>Incentive Rate ₹/MT</label><input id="incRate" type="number" value="0"></div>
+<div><label>Saving ₹</label><input id="save" type="number" value="0"></div>
+</div>
+
+<button class="calc" onclick="calculate()">🚛 CALCULATE</button>
+<button class="whatsapp">WhatsApp Share</button>
+<button class="pdf">Print / Save PDF</button>
+
+<div id="resultBox"></div>
+
 </div>
 
 <script>
 function calculate(){
-    let up=+upkm.value, rt=+rtkm.value, qty=+qty.value, rate=+rate.value;
-    let lavg=+lavg.value, eavg=+eavg.value, dp=+dprice.value;
-    let mamul=+mamul.value, oth=+oth.value, comm=+comm.value;
 
-    // DIESEL CALC
-    let dieLoad=(up/lavg)*dp;
-    let dieEmpty=(rt/eavg)*dp;
-    let totalDiesel=dieLoad+dieEmpty;
+let up = +document.getElementById("up").value;
+let ret = +document.getElementById("ret").value;
+let qty = +document.getElementById("qty").value;
+let rmt = +document.getElementById("rmt").value;
+let lav = +document.getElementById("lav").value;
+let eav = +document.getElementById("eav").value;
+let dp = +document.getElementById("dprice").value;
+let com = +document.getElementById("com").value;
+let mam = +document.getElementById("mam").value;
+let oth = +document.getElementById("oth").value;
+let incR = +document.getElementById("incRate").value;
+let save = +document.getElementById("save").value;
 
-    // FREIGHT
-    let freight=qty*rate;
-    let incentive=(freight*26.5)/100;  // adjustable later
+// core formulas 🔥
+let freight = qty*rmt;
+let incentive = qty*incR;
+let dieselLoad = (up/lav)*dp;
+let dieselEmpty = (ret/eav)*dp;
+let totalDiesel = dieselLoad+dieselEmpty;
+let expenses = totalDiesel+com+mam+oth-save;
+let finalBal = (freight+incentive)-expenses;
 
-    // ADVANCE
-    let advance=dieLoad + comm + mamul;
-    let finalPay = advance + dieEmpty + oth;
-    let balance = freight - finalPay;
+// show result
+document.getElementById("resultBox").style.display="block";
+document.getElementById("resultBox").innerHTML=`
+<b>Freight:</b> ₹${freight.toFixed(0)}<br>
+<b>Incentive:</b> ₹${incentive.toFixed(0)}<br>
+<b>Load Diesel Cost:</b> ₹${dieselLoad.toFixed(0)}<br>
+<b>Empty Diesel Cost:</b> ₹${dieselEmpty.toFixed(0)}<br>
+<b>Total Diesel:</b> ₹${totalDiesel.toFixed(0)}<br>
+<b>Other Expenses:</b> ₹${(com+mam+oth).toFixed(0)}<br>
+<b>Savings:</b> -₹${save}<br><br>
 
-    result.style.display="block";
-    result.innerHTML=
-    `<b>Fuel Expense</b><br>
-    Loaded Diesel: ₹${dieLoad.toFixed(0)}<br>
-    Empty Diesel: ₹${dieEmpty.toFixed(0)}<br>
-    Total Fuel Cost: <b>₹${totalDiesel.toFixed(0)}</b><hr>
-
-    <b>TRIP ADVANCE PAYOUT</b><br>
-    Advance Release: <b>₹${advance.toFixed(0)}</b><br>
-    Pay On Return: ₹${dieEmpty.toFixed(0)} + Other ₹${oth}<br>
-    Total Driver Payout: <b>₹${finalPay.toFixed(0)}</b><hr>
-
-    <b>Freight Summary</b><br>
-    Freight Earned: ₹${freight}<br>
-    Incentive: ₹${incentive.toFixed(0)}<br>
-    Final Balance After Expenses: <b style="color:blue">₹${balance.toFixed(0)}</b>`;
+<b>💰 Final Advance Required:</b> ₹${expenses.toFixed(0)}<br>
+<b>📌 Final Balance:</b> ₹${finalBal.toFixed(0)}
+`;
 }
 </script>
 </body>
