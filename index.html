@@ -2,41 +2,65 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MD MOVERS TRIP CALCULATOR</title>
+<title>MD Movers Trip Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{background:#eef2f3;margin:0;font-family:Arial;text-align:center;}
-.container{width:92%;max-width:620px;margin:auto;background:#fff;padding:25px;margin-top:20px;
-border-radius:12px;box-shadow:0 0 12px rgba(0,0,0,0.15);}
-input,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:6px;font-size:17px;margin-top:8px;}
-button{width:100%;padding:13px;font-size:17px;border:none;border-radius:8px;font-weight:bold;margin-top:10px;}
-.calc{background:#000;color:#fff;}
-.wa{background:#027b4b;color:#fff;}
-.pdf{background:#374151;color:#fff;}
-.result{background:#fff;width:92%;max-width:620px;margin:auto;margin-top:20px;padding:18px;font-size:18px;
-border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.22);text-align:left;font-weight:600;line-height:30px;}
-.result span{color:#027b4b;font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#eef3f7;font-family:Segoe UI, sans-serif;text-align:center;}
+
+.logo{width:120px;margin:18px auto;display:block;}
+
+h2{font-size:25px;color:#0d294f;font-weight:800;margin-bottom:15px;}
+
+.wrapper{width:90%;max-width:520px;margin:auto;background:#fff;padding:22px;
+border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,.12);}
+
+input,select{
+width:100%;padding:10px;font-size:16px;margin:6px 0;border-radius:6px;
+border:1px solid #bfbfbf;
+}
+
+button{
+width:100%;padding:12px;font-size:17px;font-weight:bold;border-radius:6px;
+margin-top:10px;border:none;cursor:pointer;
+}
+.calc{background:black;color:#fff;}
+.wa{background:#007a3b;color:#fff;}
+.pdf{background:#2f3d50;color:#fff;}
+
+.result{
+margin-top:18px;background:#fff;padding:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.18);
+width:90%;max-width:520px;margin-left:auto;margin-right:auto;text-align:left;
+font-size:17px;line-height:28px;font-weight:600;display:none;
+}
+.result span{color:#00832e;font-weight:800;}
 </style>
 </head>
 
 <body>
 
-<img src="logo.png" width="130" style="margin-top:15px;">
-<h2 style="font-size:28px;margin-top:5px;color:#1c3557;font-weight:900;">TRIP CALCULATOR</h2>
+<img src="logo.png" class="logo">
+<h2>TRIP CALCULATOR</h2>
 
-<div class="container">
-<select id="from"><option>Hazira</option><option>Dahej</option><option>Jamnagar</option><option>Mundra</option></select>
-<select id="to"><option>Taloja</option><option>Chakan</option><option>Vapi</option><option>Mumbai</option></select>
+<div class="wrapper">
+
+<select id="from">
+<option>Hazira</option><option>Dahej</option><option>Vadodara</option><option>Jamnagar</option>
+</select>
+
+<select id="to">
+<option>Taloja</option><option>Vapi</option><option>Navi Mumbai</option><option>Chakan</option>
+</select>
 
 <input id="loadKm" placeholder="Load KM">
 <input id="emptyKm" placeholder="Empty KM">
-<input id="qty" placeholder="Qty MT">
+<input id="qty" placeholder="Qty (MT)">
 <input id="rate" placeholder="Rate ₹/MT">
 
-<input id="avgLoad" placeholder="Loaded Avg KM/L">
+<input id="avgLoad" placeholder="Load Avg KM/L">
 <input id="avgEmpty" placeholder="Empty Avg KM/L">
-<input id="diesel" placeholder="Diesel ₹/L">
+<input id="diesel" placeholder="Diesel Rate ₹/L">
 
 <input id="comm" placeholder="Commission ₹">
 <input id="mamul" placeholder="Mamul ₹">
@@ -47,33 +71,37 @@ border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.22);text-align:left;font-weig
 <button class="pdf" onclick="window.print()">Print / Save PDF</button>
 </div>
 
-<div id="output" class="result" style="display:none;"></div>
+
+<div id="output" class="result"></div>
 
 
 <script>
 function calculate(){
- let L=+loadKm.value,E=+emptyKm.value,Q=+qty.value,R=+rate.value;
- let A=+avgLoad.value,B=+avgEmpty.value,D=+diesel.value;
- let C=+comm.value,M=+mamul.value,X=+extra.value;
+let L=+loadKm.value,E=+emptyKm.value,Q=+qty.value,R=+rate.value;
+let A=+avgLoad.value,B=+avgEmpty.value,D=+diesel.value;
+let C=+comm.value,M=+mamul.value,X=+extra.value;
 
- let freight=Q*R;
- let fuel=(L/A)+(E/B);
- let fuelCost=fuel*D;
- let totalExp=fuelCost+C+M+X;
- let profit=freight-totalExp;
+if(!L||!Q||!R||!A||!B||!D){alert("⚠ Enter Required Values");return;}
 
- document.getElementById("output").style.display="block";
- document.getElementById("output").innerHTML =
- `Freight: <span>₹${freight}</span><br>
-  Diesel Used: <span>${fuel.toFixed(2)} L</span><br>
-  Diesel Cost: <span>₹${fuelCost.toFixed(0)}</span><br>
-  Total Expense: <span>₹${totalExp.toFixed(0)}</span><br>
-  Net Profit / Saving: <span>₹${profit.toFixed(0)}</span>`;
+let freight=Q*R;
+let fuelUse=(L/A)+(E/B);
+let fuelCost=fuelUse*D;
+let total=fuelCost+C+M+X;
+let profit=freight-total;
+
+output.style.display="block";
+output.innerHTML = `
+Route: <span>${from.value} → ${to.value}</span><br>
+Freight: <span>₹${freight}</span><br>
+Diesel Used: <span>${fuelUse.toFixed(2)} L</span><br>
+Diesel Cost: <span>₹${fuelCost.toFixed(0)}</span><br>
+Total Expense: <span>₹${total.toFixed(0)}</span><br>
+Net Profit: <span>₹${profit.toFixed(0)}</span>`;
 }
 
 function whatsappSend(){
- let msg=document.getElementById("output").innerText.replace(/\n/g,"%0A");
- window.open(`https://wa.me/?text=🚛 Trip Summary%0A${msg}`);
+let msg=document.getElementById("output").innerText.replace(/\n/g,"%0A");
+window.open(`https://wa.me/?text=🚛 Trip Summary %0A${msg}`);
 }
 </script>
 
