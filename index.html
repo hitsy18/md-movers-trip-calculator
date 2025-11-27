@@ -2,122 +2,92 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MD MOVERS – Trip Calculator</title>
+<title>MD MOVERS – TRIP CALCULATOR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-<style>
-input, select { border: 1px solid #cfcfcf !important; }
-</style>
+<style> input,select{border:1px solid #ccc!important;padding:10px;} </style>
 </head>
 
 <body class="bg-gray-100">
 
-<!-- PREMIUM HEADER WITH LOGO -->
-<header class="bg-[#0A1B3A] text-white shadow-md py-4 flex items-center justify-center gap-4">
-    <img src="logo.png" alt="MD Movers" class="h-14 drop-shadow-md">
-    <h1 class="text-3xl font-extrabold tracking-wide">TRIP CALCULATOR</h1>
+<!-- HEADER -->
+<header class="bg-[#0A1B3A] text-white shadow-md py-4 flex items-center justify-center gap-3">
+    <img src="logo.png" class="h-12">
+    <h1 class="text-2xl font-bold tracking-wide">TRIP CALCULATOR</h1>
 </header>
 
-<div class="max-w-5xl mx-auto bg-white p-10 mt-6 rounded-xl shadow-lg">
+<div class="max-w-5xl mx-auto bg-white p-8 mt-6 rounded-xl shadow">
 
-<!-- FORM START -->
+<!-- FORM -->
 <div class="grid grid-cols-2 gap-6">
-    <select id="from" class="p-3 rounded">
-        <option>Hazira</option>
-        <option>Ahemdabad</option>
-        <option>Sanand</option>
-        <option>Kalamboli</option>
-        <option>Taloja</option>
-        <option>Thane</option>
-        <option>Panvel</option>
-        <option>Khopoli</option>
-        <option>Khalapur</option>
-        <option>Vatva</option>
-        <option>Vithalapur</option>
-        <option>Kheda</option>
-    </select>
+<input id="from" value="Hazira">
+<input id="to" value="Taloja">
 
-    <select id="to" class="p-3 rounded">
-        <option>Kalamboli</option>
-        <option>Taloja</option>
-        <option>Panvel</option>
-        <option>Thane</option>
-        <option>Khopoli</option>
-        <option>Khalapur</option>
-        <option>Ahemdabad</option>
-        <option>Sanand</option>
-        <option>Changodar</option>
-        <option>Vadodara</option>
-        <option>Savli</option>
-        <option>Mehsana</option>
-        <option>Por</option>
-    </select>
+<input id="loadkm" placeholder="Load KM">
+<input id="emptykm" placeholder="Empty KM">
 
-    <input id="loadkm" type="number" placeholder="Load KM" class="p-3 rounded">
-    <input id="emptykm" type="number" placeholder="Empty KM" class="p-3 rounded">
+<input id="qty" placeholder="Qty MT">
+<input id="rate" placeholder="Rate/MT ₹">
 
-    <input id="qty" type="number" placeholder="Qty (MT)" class="p-3 rounded">
-    <input id="rate" type="number" placeholder="Rate MT ₹" class="p-3 rounded">
+<input id="commission" placeholder="Commission %">
+<input id="mamul" placeholder="Mamul ₹">
 
-    <input id="commission" type="number" placeholder="Commission %" class="p-3 rounded">
-    <input id="mamul" type="number" placeholder="Mamul ₹" class="p-3 rounded">
+<input id="avgload" placeholder="Load Avg">
+<input id="avgempty" placeholder="Empty Avg">
 
-    <input id="avgload" type="number" step="0.1" placeholder="Load Avg" class="p-3 rounded">
-    <input id="avgempty" type="number" step="0.1" placeholder="Empty Avg" class="p-3 rounded">
-
-    <input id="dieselrate" type="number" placeholder="Diesel ₹/L" class="p-3 rounded">
+<input id="dieselrate" placeholder="Diesel Rate ₹/L">
 </div>
-<!-- FORM END -->
 
-<!-- MAIN SAVE BUTTON -->
-<button onclick="calculate()" 
-class="w-full mt-6 bg-black text-white py-4 rounded text-xl font-bold hover:bg-gray-900">
-🚚 CALCULATE & SAVE
+<!-- CALCULATE -->
+<button onclick="calculate()" class="w-full mt-6 bg-black text-white py-4 text-xl font-bold">
+🚚 CALCULATE
 </button>
 
-<!-- WHATSAPP -->
-<button onclick="shareWA()" 
-class="w-full mt-4 bg-green-600 text-white py-4 rounded text-xl font-bold">
-WhatsApp Share
-</button>
+<!-- RESULT BOX -->
+<div id="result" class="mt-6 bg-gray-900 text-white p-6 rounded text-xl font-bold hidden"></div>
 
-<!-- PDF -->
-<button onclick="window.print()" 
-class="w-full mt-3 bg-gray-800 text-white py-4 rounded text-xl font-bold">
-Print / Save as PDF
-</button>
-
-</div>
+<!-- BUTTONS -->
+<button onclick="shareWA()" class="w-full mt-4 bg-green-600 text-white py-4 text-xl font-bold">WhatsApp Share</button>
+<button onclick="window.print()" class="w-full mt-3 bg-gray-800 text-white py-4 text-xl font-bold">Print / Save PDF</button>
 
 <script>
 function calculate(){
-    let loadkm = +document.getElementById("loadkm").value;
-    let emptykm = +document.getElementById("emptykm").value;
-    let qty = +document.getElementById("qty").value;
-    let rate = +document.getElementById("rate").value;
-    let comm = +document.getElementById("commission").value;
-    let mamul = +document.getElementById("mamul").value;
-    let avgload = +document.getElementById("avgload").value;
-    let avgempty = +document.getElementById("avgempty").value;
-    let diesel = +document.getElementById("dieselrate").value;
 
-    let totkm = loadkm + emptykm;
-    let dieselUsed = (loadkm/avgload) + (emptykm/avgempty);
-    let dieselCost = dieselUsed * diesel;
-    let freight = qty * rate;
-    let commRs = (freight*comm)/100;
-    let net = freight - dieselCost - commRs - mamul;
+let load = +loadkm.value,
+    empty = +emptykm.value,
+    qtyVal = +qty.value,
+    rateVal = +rate.value,
+    commissionVal = +commission.value,
+    mamulVal = +mamul.value,
+    avgL = +avgload.value,
+    avgE = +avgempty.value,
+    dieselR = +dieselrate.value;
 
-    alert(`Freight: ₹${freight}\nDiesel: ₹${dieselCost.toFixed(0)}\nNet Saving: ₹${net.toFixed(0)}`);
+let freight = qtyVal * rateVal;
+let dieselUsed = (load/avgL) + (empty/avgE);
+let dieselCost = dieselUsed * dieselR;
+let commRS = (freight * commissionVal)/100;
+
+let netSaving = freight - dieselCost - commRS - mamulVal;
+
+// DISPLAY IN PAGE NOT ALERT
+result.innerHTML = `
+Freight: ₹${freight.toFixed(0)}<br>
+Diesel Used: ${dieselUsed.toFixed(2)} L<br>
+Diesel Cost: ₹${dieselCost.toFixed(0)}<br>
+Commission: ₹${commRS.toFixed(0)}<br>
+Mamul: ₹${mamulVal}<br>
+<br>
+<span style="color:#00ff90">Net Saving: ₹${netSaving.toFixed(0)}</span>
+`;
+result.classList.remove("hidden");
 }
 
+// WhatsApp Share
 function shareWA(){
-    let msg = `🚛 MD MOVERS TRIP DETAILS\n`+
-              `Freight: ₹${qty*rate}\nDiesel: ₹${dieselUsed}\nNet Saving: ₹${net}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+let msg = result.innerText;
+window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
 </script>
-
 </body>
 </html>
