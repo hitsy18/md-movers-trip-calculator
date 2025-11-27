@@ -2,156 +2,122 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MD Movers - Trip Calculator</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="logo.png">
-<script src="https://cdn.tailwindcss.com"></script>
+<title>MD MOVERS – Trip Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<style>
+input, select { border: 1px solid #cfcfcf !important; }
+</style>
 </head>
 
-<body class="bg-[#F1F3F7]">
+<body class="bg-gray-100">
 
-<!-- ================ PREMIUM HEADER ================ -->
-<header class="w-full bg-[#0B1C3F] text-white shadow-xl border-b-4 border-[#C22621]">
-    <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-4">
-            <img src="logo.png" class="w-14 drop-shadow-xl">
-            <div>
-                <h1 class="text-3xl font-extrabold tracking-wide">MD MOVERS FLEET SYSTEM</h1>
-                <p class="text-xs text-gray-300 -mt-1">MOVING GOODNESS — Since 2021 🚛</p>
-            </div>
-        </div>
-
-        <nav class="flex gap-3 font-semibold">
-            <a href="index.html" class="px-4 py-2 bg-[#C22621] rounded-md hover:bg-red-700">Calculator</a>
-            <a href="history.html" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-900">Trip History</a>
-        </nav>
-    </div>
+<!-- PREMIUM HEADER WITH LOGO -->
+<header class="bg-[#0A1B3A] text-white shadow-md py-4 flex items-center justify-center gap-4">
+    <img src="logo.png" alt="MD Movers" class="h-14 drop-shadow-md">
+    <h1 class="text-3xl font-extrabold tracking-wide">TRIP CALCULATOR</h1>
 </header>
 
-<!-- ============== MAIN BOX ============== -->
-<div class="max-w-4xl mx-auto bg-white shadow-2xl mt-10 p-8 rounded-xl">
+<div class="max-w-5xl mx-auto bg-white p-10 mt-6 rounded-xl shadow-lg">
 
-<h2 class="text-3xl font-bold text-center mb-6 text-[#0B1C3F]">🧾 Trip Calculator</h2>
+<!-- FORM START -->
+<div class="grid grid-cols-2 gap-6">
+    <select id="from" class="p-3 rounded">
+        <option>Hazira</option>
+        <option>Ahemdabad</option>
+        <option>Sanand</option>
+        <option>Kalamboli</option>
+        <option>Taloja</option>
+        <option>Thane</option>
+        <option>Panvel</option>
+        <option>Khopoli</option>
+        <option>Khalapur</option>
+        <option>Vatva</option>
+        <option>Vithalapur</option>
+        <option>Kheda</option>
+    </select>
 
-<!-- INPUTS -->
-<div class="grid grid-cols-2 gap-4">
+    <select id="to" class="p-3 rounded">
+        <option>Kalamboli</option>
+        <option>Taloja</option>
+        <option>Panvel</option>
+        <option>Thane</option>
+        <option>Khopoli</option>
+        <option>Khalapur</option>
+        <option>Ahemdabad</option>
+        <option>Sanand</option>
+        <option>Changodar</option>
+        <option>Vadodara</option>
+        <option>Savli</option>
+        <option>Mehsana</option>
+        <option>Por</option>
+    </select>
 
-<input id="from" value="Hazira" class="p-2 border rounded" />
-<select id="to" class="p-2 border rounded">
-<option>Taloja</option><option>Kalamboli</option><option>Panvel</option>
-<option>Thane</option><option>Khopoli</option><option>Khalapur</option>
-<option>Ahemdabad</option><option>Bavla</option><option>Vatva</option>
-<option>Changodar</option><option>Khatrej</option><option>Sanand</option>
-<option>Kalol</option><option>Chhatral</option><option>Gandhinagar</option>
-<option>Mehsana</option><option>Vithalapur</option><option>Vadodara</option>
-<option>Savli</option><option>Por</option><option>Kheda</option>
-<option>Halol</option><option>Vadindar</option>
-</select>
+    <input id="loadkm" type="number" placeholder="Load KM" class="p-3 rounded">
+    <input id="emptykm" type="number" placeholder="Empty KM" class="p-3 rounded">
 
-<input id="loadKm" type="number" placeholder="Load KM" class="border p-2 rounded">
-<input id="emptyKm" type="number" placeholder="Empty KM" class="border p-2 rounded">
+    <input id="qty" type="number" placeholder="Qty (MT)" class="p-3 rounded">
+    <input id="rate" type="number" placeholder="Rate MT ₹" class="p-3 rounded">
 
-<input id="qty" type="number" placeholder="Qty (MT)" class="border p-2 rounded">
-<input id="rate" type="number" placeholder="Rate ₹/MT" class="border p-2 rounded">
+    <input id="commission" type="number" placeholder="Commission %" class="p-3 rounded">
+    <input id="mamul" type="number" placeholder="Mamul ₹" class="p-3 rounded">
 
-<input id="mamul" type="number" placeholder="Mamul ₹" class="border p-2 rounded">
-<input id="commission" type="number" placeholder="Commission %" class="border p-2 rounded">
+    <input id="avgload" type="number" step="0.1" placeholder="Load Avg" class="p-3 rounded">
+    <input id="avgempty" type="number" step="0.1" placeholder="Empty Avg" class="p-3 rounded">
 
-<input id="avgLoad" value="2.1" class="border p-2 rounded">
-<input id="avgEmpty" value="4.0" class="border p-2 rounded">
-<input id="dieselRate" placeholder="Diesel Rate ₹" class="border p-2 rounded">
+    <input id="dieselrate" type="number" placeholder="Diesel ₹/L" class="p-3 rounded">
 </div>
+<!-- FORM END -->
 
-<button onclick="calculate()" class="w-full bg-black text-white py-3 mt-6 rounded hover:bg-gray-800">
-🚛 CALCULATE & SAVE
+<!-- MAIN SAVE BUTTON -->
+<button onclick="calculate()" 
+class="w-full mt-6 bg-black text-white py-4 rounded text-xl font-bold hover:bg-gray-900">
+🚚 CALCULATE & SAVE
 </button>
 
-<!-- ACTION BUTTONS -->
-<div class="flex flex-col md:flex-row gap-3 mt-4">
-<button onclick="shareWhatsApp()" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700">
+<!-- WHATSAPP -->
+<button onclick="shareWA()" 
+class="w-full mt-4 bg-green-600 text-white py-4 rounded text-xl font-bold">
 WhatsApp Share
 </button>
-<button onclick="window.print()" class="flex-1 bg-gray-700 text-white py-2 rounded hover:bg-gray-900">
+
+<!-- PDF -->
+<button onclick="window.print()" 
+class="w-full mt-3 bg-gray-800 text-white py-4 rounded text-xl font-bold">
 Print / Save as PDF
 </button>
+
 </div>
 
-<!-- RESULT -->
-<div id="result" class="mt-6 text-xl font-bold text-gray-800"></div>
-</div>
-
-
-<!-- ==================== JAVASCRIPT ====================== -->
 <script>
-// CALCULATE & SAVE SYSTEM
 function calculate(){
- let from=document.getElementById("from").value;
- let to=document.getElementById("to").value;
- let load=+loadKm.value, empty=+emptyKm.value;
- let qty=+qty.value, rate=+rate.value;
- let mamul=+mamul.value, com=+commission.value;
- let avgL=+avgLoad.value, avgE=+avgEmpty.value, diesel=+dieselRate.value;
+    let loadkm = +document.getElementById("loadkm").value;
+    let emptykm = +document.getElementById("emptykm").value;
+    let qty = +document.getElementById("qty").value;
+    let rate = +document.getElementById("rate").value;
+    let comm = +document.getElementById("commission").value;
+    let mamul = +document.getElementById("mamul").value;
+    let avgload = +document.getElementById("avgload").value;
+    let avgempty = +document.getElementById("avgempty").value;
+    let diesel = +document.getElementById("dieselrate").value;
 
- let freight=qty*rate;
- let dieselUsed=(load/avgL)+(empty/avgE);
- let dieselCost=dieselUsed*diesel;
- let commRs=(freight*com/100);
- let net=freight-dieselCost-mamul-commRs;
+    let totkm = loadkm + emptykm;
+    let dieselUsed = (loadkm/avgload) + (emptykm/avgempty);
+    let dieselCost = dieselUsed * diesel;
+    let freight = qty * rate;
+    let commRs = (freight*comm)/100;
+    let net = freight - dieselCost - commRs - mamul;
 
- document.getElementById("result").innerHTML=
- `Freight ₹${freight}<br>
- Diesel ${dieselUsed.toFixed(2)} L (₹${dieselCost.toFixed(0)})<br>
- Commission ₹${commRs.toFixed(0)}<br>
- Mamul ₹${mamul}<br>
- <b>Net Saving ₹${net.toFixed(0)}</b>`;
-
- // LOCAL SAVE
- let trip={date:new Date().toLocaleString(),route:`${from} → ${to}`,qty,rate,net,advUsed:dieselCost,status:(net>0?"Profit":"Loss")};
- let data=JSON.parse(localStorage.getItem("mdTrips"))||[];
- data.push(trip);localStorage.setItem("mdTrips",JSON.stringify(data));
-
- // CLOUD UPLOAD IF AVAILABLE
- if(window.saveTripToCloud){ saveTripToCloud(trip); }
-
- alert("Trip Saved ✔");
+    alert(`Freight: ₹${freight}\nDiesel: ₹${dieselCost.toFixed(0)}\nNet Saving: ₹${net.toFixed(0)}`);
 }
 
-// WHATSAPP SHARE
-function shareWhatsApp(){
- let text=document.getElementById("result").innerText;
- window.open("https://wa.me/?text="+encodeURIComponent(text),'_blank');
+function shareWA(){
+    let msg = `🚛 MD MOVERS TRIP DETAILS\n`+
+              `Freight: ₹${qty*rate}\nDiesel: ₹${dieselUsed}\nNet Saving: ₹${net}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
 </script>
-
-
-<!-- ============ FIREBASE MODULE (NO EDIT REQUIRED) =========== -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig={
- apiKey:"AIzaSyAg2WhxP6f0qr0P5-p6VOvm4_n8CTKchBg",
- authDomain:"md-movers-fleet.firebaseapp.com",
- projectId:"md-movers-fleet",
- storageBucket:"md-movers-fleet.firebasestorage.app",
- messagingSenderId:"386416808558",
- appId:"1:386416808558:web:8101db7f34a55848148c7f"
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-
-// FIREBASE SAVE FUNCTION UNIVERSAL
-window.saveTripToCloud=async(trip)=>{
- try{ await addDoc(collection(db,"trips"),trip);console.log("Cloud Save ✔");}
- catch(e){console.log("Cloud Save Error ❌",e);}
-};
-</script>
-
-
-<footer class="mt-10 bg-[#0B1C3F] text-white text-center py-3">
-© 2025 MD MOVERS | FLEET AUTOMATION SYSTEM
-</footer>
 
 </body>
 </html>
