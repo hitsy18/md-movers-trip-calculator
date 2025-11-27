@@ -1,87 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Trip Calculator - MD MOVERS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-body{
-    background:#eef2f5;
-    font-family:Segoe UI, sans-serif;
-}
-.container-box{
-    max-width:700px;
-    background:white;
-    padding:35px 30px;
-    border-radius:12px;
-    box-shadow:0px 0px 15px rgba(0,0,0,.08);
-    margin-top:25px;
-}
-.logo{
-    width:130px;
-    display:block;
-    margin:auto;
-}
-h2{text-align:center;font-weight:700;margin-top:10px;}
-.btn-primary{background:#000;border:none;font-size:18px;padding:12px;}
-.btn-whatsapp{background:#007b39;color:white;font-size:18px;padding:12px;}
-.btn-pdf{background:#2d3640;color:white;font-size:18px;padding:12px;}
-
-#result{
-    display:none;
-    background:#ffffff;
-    border-radius:10px;
-    padding:18px;
-    margin-top:22px;
-    font-size:18px;
-    border-left:6px solid #008a00;
-}
-</style>
-
-</head>
-<body>
-
-<center>
-<img src="logo.png" class="logo">
-<h2>TRIP CALCULATOR</h2>
-</center>
-
-<div class="container container-box">
-
-<select id="from" class="form-control mb-3">
-<option>Hazira</option><option>Dahej</option><option>Taloja</option><option>Jhagadia</option>
-</select>
-
-<select id="to" class="form-control mb-3">
-<option>Taloja</option><option>Hazira</option><option>Dahej</option><option>Jhagadia</option>
-</select>
-
-<input id="loadkm" placeholder="Load KM" class="form-control mb-3">
-<input id="emptykm" placeholder="Empty KM" class="form-control mb-3">
-<input id="qty" placeholder="Qty (MT)" class="form-control mb-3">
-<input id="rate" placeholder="Rate ₹/MT" class="form-control mb-3">
-<input id="loadavg" placeholder="Load Avg KM/L" class="form-control mb-3">
-<input id="emptyavg" placeholder="Empty Avg KM/L" class="form-control mb-3">
-<input id="diesel" placeholder="Diesel Price ₹/L" class="form-control mb-3">
-<input id="commission" placeholder="Commission ₹" class="form-control mb-3">
-<input id="mamul" placeholder="Mamul ₹" class="form-control mb-3">
-<input id="other" placeholder="Other Expense ₹" class="form-control mb-3">
-
-<button onclick="calc()" class="btn btn-primary w-100">🚛 CALCULATE</button>
-<button class="btn btn-whatsapp w-100 mt-3">WhatsApp Share</button>
-<button class="btn btn-pdf w-100 mt-3">Print / Save PDF</button>
-
-<!-- 🔥 RESULT BOX SHOW HERE -->
-<div id="result"></div>
-
-</div>
-
-
-
 <script>
 function calc(){
+
     let lkm = +document.getElementById("loadkm").value;
     let ekm = +document.getElementById("emptykm").value;
     let qty = +document.getElementById("qty").value;
@@ -94,19 +13,17 @@ function calc(){
     let oth = +document.getElementById("other").value;
 
     let freight = qty * rate;
-    let fuel = (lkm/la) + (ekm/ea);
-    let fuelCost = fuel * dr;
-    let profit = freight - fuelCost - com - mam - oth;
+    let dieselUsed = (lkm/la) + (ekm/ea);
+    let dieselCost = dieselUsed * dr;
+    let profit = freight - dieselCost - com - mam - oth;
 
-    result.style.display="block";
-    result.innerHTML=`
-        <b>🚛 Freight:</b> ₹${freight}<br>
-        <b>⛽ Fuel Used:</b> ${fuel.toFixed(2)} L<br>
-        <b>🧾 Fuel Cost:</b> ₹${fuelCost.toFixed(0)}<br>
-        <b>💰 Net Profit / Saving:</b> <span style="color:#008a00;font-weight:700;">₹${profit.toFixed(0)}</span>
+    document.getElementById("resultBox").style.display="block";
+    document.getElementById("resultBox").innerHTML = `
+        🚛 <b>Freight:</b> ₹${freight}<br>
+        ⛽ <b>Diesel Used:</b> ${dieselUsed.toFixed(2)} L<br>
+        🧾 <b>Fuel Cost:</b> ₹${dieselCost.toFixed(0)} <br>
+        💰 <b>Net Saving / Profit:</b>  
+        <span style="color:#008500;font-weight:700;">₹${profit.toFixed(0)}</span>
     `;
 }
 </script>
-
-</body>
-</html>
