@@ -2,108 +2,114 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD MOVERS — Trip Calculator</title>
+<title>MD Movers Trip Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- STYLING -->
 <style>
     body{
-        background:#eef1f5;
-        font-family:Calibri, sans-serif;
+        background:#eef0f4;
+        font-family:Arial, sans-serif;
+        margin:0;
         text-align:center;
     }
-    .box{
-        width:90%;
-        max-width:500px;
-        background:#fff;
-        padding:22px;
-        border-radius:12px;
-        margin:25px auto;
-        box-shadow:0 0 12px rgba(0,0,0,0.12);
+
+    .logo{
+        width:120px;
+        margin-top:25px;
     }
-    input,select{
-        width:100%;
-        padding:11px;
+
+    h2{
         margin-top:10px;
-        border-radius:6px;
-        border:1px solid #ccc;
-        font-size:16px;
+        font-size:26px;
+        font-weight:700;
+        color:#222;
+        letter-spacing:1px;
     }
+
+    .box{
+        background:#fff;
+        width:92%;
+        max-width:550px;
+        margin:25px auto;
+        padding:25px;
+        border-radius:12px;
+        box-shadow:0 0 12px rgba(0,0,0,0.08);
+    }
+
+    select,input{
+        width:100%;
+        height:42px;
+        margin:6px 0;
+        border:1px solid #ccc;
+        border-radius:6px;
+        font-size:16px;
+        padding-left:10px;
+        outline:none;
+    }
+
     button{
         width:100%;
-        padding:12px;
-        margin-top:15px;
-        border:none;
-        font-size:18px;
+        height:48px;
         border-radius:6px;
+        font-size:17px;
+        margin-top:10px;
         cursor:pointer;
-        font-weight:600;
+        font-weight:700;
+        letter-spacing:.3px;
     }
-    #calcBtn{ background:black; color:white; }
-    #waBtn{ background:#007a36; color:white; }
-    #pdfBtn{ background:#2d3846; color:white; }
 
-    /* RESULT BOX */
+    #calbtn{background:black;color:white;}
+    #wa{background:#017a36;color:white;}
+    #pdf{background:#253344;color:white;}
+
     #resultDisplay{
         display:none;
-        background:white;
-        margin:20px auto 5px;
-        padding:15px;
-        font-size:18px;
-        border-radius:10px;
-        width:90%;
-        max-width:500px;
-        border-left:6px solid #0aa400;
-        text-align:left;
-        line-height:28px;
+        margin-top:22px;
     }
-    .profit{color:#008000;font-weight:bold;}
 </style>
 </head>
 
 <body>
 
-<img src="logo.png" width="110" style="margin-top:20px;">
-<h2 style="letter-spacing:1px;margin-top:5px;">TRIP CALCULATOR</h2>
+<img src="logo.png" class="logo">
+<h2>TRIP CALCULATOR</h2>
 
 <div class="box">
 
-    <select id="from">
-        <option>Hazira</option>
-        <option>Taloja</option>
-        <option>Dahej</option>
-        <option>Jamnagar</option>
-    </select>
+<select id="start">
+    <option>Hazira</option><option>Dahej</option>
+    <option>Taloja</option><option>Jhagadia</option>
+</select>
 
-    <select id="to">
-        <option>Taloja</option>
-        <option>Hazira</option>
-        <option>Mumbai</option>
-        <option>Ahmedabad</option>
-    </select>
+<select id="end">
+    <option>Taloja</option><option>Dahej</option>
+    <option>Hazira</option><option>Jhagadia</option>
+</select>
 
-    <input id="loadkm" placeholder="Load KM">
-    <input id="emptykm" placeholder="Empty KM">
-    <input id="qty" placeholder="Qty MT">
-    <input id="rate" placeholder="Rate ₹/MT">
-    <input id="loadavg" placeholder="Loaded Avg KM/L">
-    <input id="emptyavg" placeholder="Empty Avg KM/L">
-    <input id="diesel" placeholder="Diesel Price ₹/L">
-    <input id="commission" placeholder="Commission ₹">
-    <input id="mamul" placeholder="Mamul ₹">
-    <input id="other" placeholder="Other Expense ₹">
+<input id="loadkm" placeholder="Load KM">
+<input id="emptykm" placeholder="Empty KM">
+<input id="qty" placeholder="Qty MT">
+<input id="rate" placeholder="Rate ₹/MT">
+<input id="loadavg" placeholder="Loaded Avg KM/L">
+<input id="emptyavg" placeholder="Empty Avg KM/L">
+<input id="diesel" placeholder="Diesel Price ₹/L">
+<input id="commission" placeholder="Commission ₹">
+<input id="mamul" placeholder="Mamul ₹">
+<input id="other" placeholder="Other Expense ₹">
 
-    <button id="calcBtn" onclick="calc()">🚛 CALCULATE</button>
-    <button id="waBtn" onclick="shareWA()">WhatsApp Share</button>
-    <button id="pdfBtn" onclick="window.print()">Print / Save PDF</button>
-</div>
+<button id="calbtn" onclick="calc()">🚛 CALCULATE</button>
+<button id="wa" onclick="shareWA()">WhatsApp Share</button>
+<button id="pdf" onclick="window.print()">Print / Save PDF</button>
 
-<!-- RESULT CARD BELOW — NO POPUP -->
+<!-- RESULT CARD -->
 <div id="resultDisplay"></div>
 
-<!-- SCRIPT -->
+</div>
+
+
 <script>
 function calc(){
+
     let l = +loadkm.value;
     let e = +emptykm.value;
     let q = +qty.value;
@@ -115,23 +121,35 @@ function calc(){
     let m = +mamul.value;
     let o = +other.value;
 
+    if(!l||!q||!r||!la||!ea||!d){
+        alert("⚠ Load KM, Qty, Rate, Avg, Diesel price required");
+        return;
+    }
+
     let freight = q*r;
     let fuel = (l/la)+(e/ea);
-    let fuelCost = fuel*d;
+    let fuelCost=fuel*d;
     let profit = freight-fuelCost-c-m-o;
 
     resultDisplay.style.display="block";
-    resultDisplay.innerHTML = `
-        📦 <b>Freight:</b> ₹${freight}<br>
-        ⛽ <b>Fuel Used:</b> ${fuel.toFixed(2)} L<br>
-        🧾 <b>Fuel Cost:</b> ₹${fuelCost.toFixed(0)}<br>
-        💰 <b>Net Profit:</b> <span class="profit">₹${profit.toFixed(0)}</span>
-    `;
+    resultDisplay.innerHTML=`
+        <div style="
+            background:#fff;padding:18px;border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,.15);
+            border-left:6px solid #28a745;width:100%;
+            font-size:18px;text-align:left;line-height:30px;
+        ">
+        <b>📦 Freight:</b> ₹${freight}<br>
+        <b>⛽ Fuel Used:</b> ${fuel.toFixed(2)} L<br>
+        <b>💳 Fuel Cost:</b> ₹${fuelCost.toFixed(0)}<br>
+        <b>💰 Net Profit:</b> <span style="color:green;font-weight:800;">₹${profit.toFixed(0)}</span>
+        </div>`;
 }
 
-// WHATSAPP SHARE
+
 function shareWA(){
-    let text = resultDisplay.innerText.replace(/\n/g,"%0A");
+    if(resultDisplay.style.display=="none"){alert("⚠ Calculate first");return;}
+    let text=resultDisplay.innerText.replace(/\n/g,"%0A");
     window.open(`https://wa.me/?text=${text}`,'_blank');
 }
 </script>
