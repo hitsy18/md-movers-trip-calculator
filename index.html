@@ -3,42 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD Trip Calculator</title>
+<title>MD MOVERS TRIP CALCULATOR</title>
 
 <style>
-body{margin:0;font-family:Segoe UI,Arial;background:#f2f5f7;text-align:center;}
-.logo{width:110px;margin:18px auto;display:block;}
-
-h1{font-size:23px;font-weight:700;margin-top:5px;color:#14222e;}
+body{
+    font-family: Poppins,Segoe UI;
+    background:#eef3f6;
+    margin:0;text-align:center;
+}
+.logo{
+    width:110px;margin-top:10px;
+}
+h1{margin:5px 0 15px;font-size:25px;color:#1a2d3a;font-weight:700;}
 
 .container{
-    width:95%;max-width:760px;background:#fff;margin:auto;padding:18px 10px 30px;
-    border-radius:14px;box-shadow:0 0 12px rgba(0,0,0,.08);
+    width:95%;max-width:900px;background:white;
+    margin:auto;margin-top:15px;padding:25px;
+    border-radius:14px;box-shadow:0 0 12px rgba(0,0,0,.1);
 }
 
-/* 2 column input grid — Jaisa aapne bola compact */
+/* === 2 Column Layout === */
 .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:12px;
-    margin-top:15px;
+    margin-top:10px;
 }
 
 input,select{
-    padding:12px;font-size:15px;border-radius:8px;border:1px solid #bbb;background:#fff;
-    width:100%;font-weight:600;
+    width:100%;padding:12px;border-radius:8px;
+    border:1px solid #bbb;font-size:15px;font-weight:600;
 }
 
 /* Buttons */
 .btn{
-    width:100%;padding:15px;border-radius:8px;
-    font-size:18px;font-weight:700;color:white;margin-top:16px;border:none;
+    width:100%;padding:15px;border-radius:8px;margin-top:18px;
+    color:#fff;font-size:18px;font-weight:700;border:none;
 }
-.save{background:#000;}
-.wa{background:#0c8a63;}
+.calc{background:#000;}
+.wa{background:#00966a;}
 </style>
-
 </head>
+
 <body>
 
 <img src="logo.png" class="logo">
@@ -47,51 +53,52 @@ input,select{
 <div class="container">
 
 <div class="grid">
-<select id="from"><option>Hazira</option></select>
-<select id="to">
-<option>Taloja</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option>
-<option>Khopoli</option><option>Khalapur</option><option>Ahemdabad</option><option>Bavla</option>
-<option>Vatva</option><option>Changodar</option><option>Khatrej</option><option>Sanand</option>
-<option>Kalol</option><option>Chhatral</option><option>Gandhinagar</option><option>Mehsana</option>
-<option>Vithalapur</option><option>Vadodara</option><option>Savli</option><option>Por</option>
-<option>Kheda</option><option>Halol</option><option>Vadindar</option>
-</select>
+    <select id="from"><option>Hazira</option></select>
+    <select id="to">
+      <option>Taloja</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option>
+      <option>Khopoli</option><option>Khalapur</option><option>Ahemdabad</option><option>Bavla</option>
+      <option>Vatva</option><option>Changodar</option><option>Khatrej</option><option>Sanand</option>
+      <option>Kalol</option><option>Chhatral</option><option>Gandhinagar</option><option>Mehsana</option>
+      <option>Vithalapur</option><option>Vadodara</option><option>Savli</option><option>Por</option>
+      <option>Kheda</option><option>Halol</option><option>Vadindar</option>
+    </select>
 
-<input type="number" id="loadKm" placeholder="Load KM">
-<input type="number" id="emptyKm" placeholder="Empty KM">
+    <input id="loadKm" placeholder="Load KM">
+    <input id="emptyKm" placeholder="Empty KM">
 
-<input type="number" id="qty" placeholder="Qty (MT)">
-<input type="number" id="rate" placeholder="Rate ₹/MT">
+    <input id="qty" placeholder="Qty MT">
+    <input id="rate" placeholder="Rate ₹/MT">
 
-<input type="number" id="avgLoad" placeholder="Load Avg KM/L">
-<input type="number" id="avgEmpty" placeholder="Empty Avg KM/L">
+    <input id="avgLoad" placeholder="Load Avg KM/L">
+    <input id="avgEmpty" placeholder="Empty Avg KM/L">
 
-<input type="number" id="diesel" placeholder="Diesel Rate ₹/L">
-<input type="number" id="comm" placeholder="Commission ₹">
+    <input id="diesel" placeholder="Diesel Rate ₹/L">
+    <input id="comm" placeholder="Commission ₹">
 
-<input type="number" id="mamul" placeholder="Mamul ₹">
-<input type="number" id="extra" placeholder="Extra Expense">
+    <input id="mamul" placeholder="Mamul ₹">
+    <input id="extra" placeholder="Other Expense ₹">
 </div>
 
-<button class="btn save" onclick="calc()">🚛 CALCULATE</button>
+<button class="btn calc" onclick="calc()">🚛 CALCULATE</button>
 <button class="btn wa" onclick="whatsapp()">WhatsApp Share</button>
+
 </div>
 
 <script>
 function calc(){
  let l=+loadKm.value,e=+emptyKm.value,q=+qty.value,r=+rate.value;
- let aL=+avgLoad.value,aE=+avgEmpty.value,f=+diesel.value,c=+comm.value,m=+mamul.value,x=+extra.value;
+ let a1=+avgLoad.value,a2=+avgEmpty.value,d=+diesel.value,c=+comm.value,m=+mamul.value,x=+extra.value;
 
  let freight=q*r;
- let used = (l/aL)+(e/aE);
- let fuelcost = used*f;
- let profit = freight-fuelcost-c-m-x;
+ let fuel = (l/a1)+(e/a2);
+ let cost = fuel*d;
+ let profit = freight-cost-c-m-x;
 
- alert(`Freight ₹${freight}\nDiesel ${used.toFixed(2)}L\nFuel Cost ₹${fuelcost.toFixed(0)}\nProfit ₹${profit.toFixed(0)}`);
+ alert(`Freight: ₹${freight}\nFuel Used: ${fuel.toFixed(2)}L\nFuel Cost: ₹${cost.toFixed(0)}\nProfit: ₹${profit.toFixed(0)}`);
 }
 
 function whatsapp(){
- window.open(`https://wa.me/?text=🚛Trip%20Report%0AFrom:${from.value}%20-%20${to.value}`);
+ window.open(`https://wa.me/?text=🚛 Trip%20Report%0A${from.value}→${to.value}`);
 }
 </script>
 
