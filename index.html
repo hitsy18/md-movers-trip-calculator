@@ -2,26 +2,30 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Trip Calculator - MD Movers</title>
+<title>MD MOVERS TRIP CALCULATOR</title>
 <style>
-body {font-family: Arial;background:#eef2f7;margin:0;text-align:center;}
-.container {width:80%;margin:auto;margin-top:30px;padding:30px;background:white;border-radius:10px;
-box-shadow:0 0 15px rgba(0,0,0,0.1);}
-.logo {width:110px;margin-bottom:5px;}
-h2 {margin-top:0;color:#111;font-size:23px;font-weight:900}
+body{margin:0;font-family:Arial;background:#f2f4f7;text-align:center;}
+.container{width:80%;margin:auto;background:white;padding:25px;border-radius:10px;margin-top:25px;}
+.logo{width:120px;margin-top:10px;}
+h2{letter-spacing:1px;margin-bottom:20px;}
 
-.row{display:flex;gap:20px;width:100%;margin-bottom:10px;}
+.row{display:flex;gap:10px;margin-bottom:10px;}
 .row div{flex:1;text-align:left;}
-input,select{width:100%;padding:10px;border:1px solid #444;border-radius:6px;font-size:15px;margin-top:6px}
+input, select{
+width:100%;padding:10px;font-size:15px;border:1px solid #bbb;border-radius:5px;
+}
+label{font-size:13px;font-weight:bold;margin-bottom:3px;display:block;}
 
-button{width:100%;padding:14px;font-size:17px;border:none;border-radius:6px;color:white;margin-top:10px;cursor:pointer;}
-.calc{background:black;} .calc:hover{background:#222}
-.whatsapp{background:#006A21;} .whatsapp:hover{background:#035e1e}
-.pdf{background:#1d2a3c;} .pdf:hover{background:#131d29}
+button{
+width:100%;padding:14px;font-size:18px;color:white;border:none;border-radius:5px;margin-top:10px;cursor:pointer;
+}
+.calc{background:black;}
+.whatsapp{background:#007A33;}
+.pdf{background:#0e1b2b;}
 
 #resultBox{
-margin-top:25px;background:#f9f9f9;padding:18px;border-left:6px solid green;
-text-align:left;font-size:16px;line-height:25px;display:none;border-radius:6px;
+background:#fff;border-radius:10px;margin-top:15px;padding:12px;text-align:left;
+font-size:16px;line-height:22px;border:2px solid #222;display:none;
 }
 </style>
 </head>
@@ -32,38 +36,31 @@ text-align:left;font-size:16px;line-height:25px;display:none;border-radius:6px;
 
 <div class="container">
 
-<!-- SELECTION -->
-<div class="row">
-<div>
-<label>FROM</label><select id="from">
-<option>Hazira</option><option>Sanand</option><option>Taloja</option>
-</select></div>
+<!-- ========================= FORM ========================= -->
 
-<div>
-<label>TO</label><select id="to">
-<option>Hazira</option><option>Sanand</option><option>Taloja</option>
-</select></div>
+<div class="row">
+<div><label>FROM</label>
+<select id="from"><option>Hazira</option><option>Sanand</option><option>Dahej</option></select></div>
+
+<div><label>TO</label>
+<select id="to"><option>Taloja</option><option>Sanand</option><option>Dahej</option></select></div>
 </div>
 
-<!-- KM SIDE BY SIDE -->
 <div class="row">
-<div><label>Upward KM</label><input id="up" type="number"></div>
-<div><label>Return KM</label><input id="ret" type="number"></div>
+<div><label>UPWARD KM</label><input id="up" type="number"></div>
+<div><label>RETURN KM</label><input id="ret" type="number"></div>
 </div>
 
-<!-- LOADING -->
 <div class="row">
-<div><label>Load Qty (MT)</label><input id="qty" type="number"></div>
-<div><label>Rate ₹/MT</label><input id="rmt" type="number"></div>
+<div><label>LOAD QTY (MT)</label><input id="qty" type="number"></div>
+<div><label>RATE ₹/MT</label><input id="rmt" type="number"></div>
 </div>
 
-<!-- AVERAGE -->
 <div class="row">
 <div><label>Loaded Avg KM/L</label><input id="lav" type="number"></div>
 <div><label>Empty Avg KM/L</label><input id="eav" type="number"></div>
 </div>
 
-<!-- DIESEL / COMMISSION / MAMUL -->
 <div class="row">
 <div><label>Diesel Price ₹/L</label><input id="dprice" type="number"></div>
 <div><label>Commission ₹</label><input id="com" type="number" value="0"></div>
@@ -74,58 +71,86 @@ text-align:left;font-size:16px;line-height:25px;display:none;border-radius:6px;
 <div><label>Other Expenses ₹</label><input id="oth" type="number" value="0"></div>
 </div>
 
-<!-- INCENTIVE + SAVING -->
+<!-- ADVANCE CALC + EXTRA EXPENSES -->
+
+<h3 style="margin:15px 0 5px;font-size:17px;">EXPENSES INCLUDED IN ADVANCE ↓</h3>
+
 <div class="row">
+<div><label>Border ₹</label><input id="borderExp" type="number" value="0"></div>
+<div><label>Police ₹</label><input id="policeExp" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div><label>Tyre Exp ₹</label><input id="tyreExp" type="number" value="0"></div>
+<div><label>Overload ₹</label><input id="overloadExp" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div><label>Two Point ₹</label><input id="twoPointExp" type="number" value="0"></div>
+<div><label>ODC / Wide Load ₹</label><input id="odcExp" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div><label>Toll Deduction ₹</label><input id="tollDeduct" type="number" value="0"></div>
 <div><label>Incentive Rate ₹/MT</label><input id="incRate" type="number" value="0"></div>
-<div><label>Saving ₹</label><input id="save" type="number" value="0"></div>
 </div>
 
 <button class="calc" onclick="calculate()">🚛 CALCULATE</button>
 <button class="whatsapp">WhatsApp Share</button>
 <button class="pdf">Print / Save PDF</button>
 
+<!-- RESULT DISPLAY -->
+
 <div id="resultBox"></div>
 
 </div>
 
+<!-- ========================= SCRIPT ========================= -->
+
 <script>
 function calculate(){
 
-let up = +document.getElementById("up").value;
-let ret = +document.getElementById("ret").value;
-let qty = +document.getElementById("qty").value;
-let rmt = +document.getElementById("rmt").value;
-let lav = +document.getElementById("lav").value;
-let eav = +document.getElementById("eav").value;
-let dp = +document.getElementById("dprice").value;
-let com = +document.getElementById("com").value;
-let mam = +document.getElementById("mam").value;
-let oth = +document.getElementById("oth").value;
-let incR = +document.getElementById("incRate").value;
-let save = +document.getElementById("save").value;
+let up=+up.value, ret=+ret.value, qty=+qty.value, rmt=+rmt.value, lav=+lav.value, eav=+eav.value, dp=+dprice.value;
+let com=+com.value, mam=+mam.value, oth=+oth.value, incR=+incRate.value;
 
-// core formulas 🔥
+// Add-In-Advance Expenses
+let border=+borderExp.value, police=+policeExp.value, tyre=+tyreExp.value;
+let overload=+overloadExp.value, twoPoint=+twoPointExp.value, odc=+odcExp.value;
+let toll=+tollDeduct.value;
+
+// Core Values
 let freight = qty*rmt;
 let incentive = qty*incR;
-let dieselLoad = (up/lav)*dp;
-let dieselEmpty = (ret/eav)*dp;
-let totalDiesel = dieselLoad+dieselEmpty;
-let expenses = totalDiesel+com+mam+oth-save;
-let finalBal = (freight+incentive)-expenses;
 
-// show result
-document.getElementById("resultBox").style.display="block";
-document.getElementById("resultBox").innerHTML=`
-<b>Freight:</b> ₹${freight.toFixed(0)}<br>
-<b>Incentive:</b> ₹${incentive.toFixed(0)}<br>
-<b>Load Diesel Cost:</b> ₹${dieselLoad.toFixed(0)}<br>
-<b>Empty Diesel Cost:</b> ₹${dieselEmpty.toFixed(0)}<br>
-<b>Total Diesel:</b> ₹${totalDiesel.toFixed(0)}<br>
-<b>Other Expenses:</b> ₹${(com+mam+oth).toFixed(0)}<br>
-<b>Savings:</b> -₹${save}<br><br>
+// Diesel
+let dieselLoad=(up/lav)*dp;
+let dieselEmpty=(ret/eav)*dp;
+let totalDiesel=dieselLoad+dieselEmpty;
 
-<b>💰 Final Advance Required:</b> ₹${expenses.toFixed(0)}<br>
-<b>📌 Final Balance:</b> ₹${finalBal.toFixed(0)}
+// Total ADVANCE = Diesel + all expenses
+let totalAdvance= totalDiesel + border + police + tyre + overload + twoPoint + odc;
+
+// Final Balance
+let balance = (freight + incentive) - (totalAdvance + toll);
+
+// Show Output
+resultBox.style.display="block";
+resultBox.innerHTML = `
+🔹 <b>FREIGHT:</b> ₹${freight.toFixed(0)}<br>
+🔹 <b>INCENTIVE:</b> ₹${incentive.toFixed(0)}<br><hr>
+
+🟦 Diesel Load Cost: ₹${dieselLoad.toFixed(0)}<br>
+🟦 Diesel Empty Cost: ₹${dieselEmpty.toFixed(0)}<br>
+<b>Total Diesel Cost = ₹${totalDiesel.toFixed(0)}</b><hr>
+
+<b>Advance Components:</b><br>
+Border ₹${border} | Police ₹${police} | Tyre ₹${tyre}<br>
+Overload ₹${overload} | Two-Point ₹${twoPoint} | ODC ₹${odc}<br><br>
+
+<b style="color:green;font-size:20px;">Total Advance = ₹${totalAdvance.toFixed(0)}</b><br>
+Toll Deduction = ₹${toll}<hr>
+
+<b style="color:#d40000;font-size:22px;">FINAL BALANCE = ₹${balance.toFixed(0)}</b>
 `;
 }
 </script>
