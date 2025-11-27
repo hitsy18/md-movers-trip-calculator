@@ -2,157 +2,189 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MD MOVERS TRIP CALCULATOR</title>
+<title>MD Trip Calculator</title>
 <style>
-body{margin:0;font-family:Arial;background:#f2f4f7;text-align:center;}
-.container{width:80%;margin:auto;background:white;padding:25px;border-radius:10px;margin-top:25px;}
-.logo{width:120px;margin-top:10px;}
-h2{letter-spacing:1px;margin-bottom:20px;}
+    body{background:#eef1f4;font-family:Arial;margin:0;padding:0;text-align:center;}
+    h2{margin-top:15px;font-size:26px;font-weight:700;}
 
-.row{display:flex;gap:10px;margin-bottom:10px;}
-.row div{flex:1;text-align:left;}
-input, select{
-width:100%;padding:10px;font-size:15px;border:1px solid #bbb;border-radius:5px;
-}
-label{font-size:13px;font-weight:bold;margin-bottom:3px;display:block;}
+    .box{
+        width:85%;
+        background:white;
+        padding:25px;
+        margin:auto;
+        margin-top:15px;
+        border-radius:10px;
+        box-shadow:0 0 15px rgba(0,0,0,0.1);
+    }
+    input,select{
+        width:90%;padding:10px;margin:6px;border-radius:6px;
+        border:1px solid #bbb;font-size:15px;
+    }
+    .row{display:flex;justify-content:space-between;gap:10px;}
+    .col{width:50%;}
 
-button{
-width:100%;padding:14px;font-size:18px;color:white;border:none;border-radius:5px;margin-top:10px;cursor:pointer;
-}
-.calc{background:black;}
-.whatsapp{background:#007A33;}
-.pdf{background:#0e1b2b;}
+    button{
+        width:95%;padding:14px;font-size:17px;
+        border:none;border-radius:6px;margin-top:10px;
+        font-weight:bold;color:white;cursor:pointer;
+    }
+    .calc{background:black;}
+    .whatsapp{background:#007a33;}
+    .pdf{background:#0b1f33;}
 
-#resultBox{
-background:#fff;border-radius:10px;margin-top:15px;padding:12px;text-align:left;
-font-size:16px;line-height:22px;border:2px solid #222;display:none;
-}
+    #resultBox{
+        width:85%;display:none;margin-top:18px;
+        background:#ffffff;padding:18px;border-radius:8px;
+        box-shadow:0 0 10px rgba(0,0,0,0.15);font-size:18px;
+        text-align:left;line-height:29px;
+    }
 </style>
 </head>
 <body>
 
-<img src="logo.png" class="logo">
+<img src="logo.png" width="140" style="margin-top:10px;">
 <h2>TRIP CALCULATOR</h2>
 
-<div class="container">
-
-<!-- ========================= FORM ========================= -->
+<div class="box">
 
 <div class="row">
-<div><label>FROM</label>
-<select id="from"><option>Hazira</option><option>Sanand</option><option>Dahej</option></select></div>
+<div class="col">
+    <label>FROM</label>
+    <select id="from">
+        <option>Hazira</option><option>Taloja</option><option>Vapi</option>
+        <option>Sanand</option><option>Mumbai</option>
+    </select>
 
-<div><label>TO</label>
-<select id="to"><option>Taloja</option><option>Sanand</option><option>Dahej</option></select></div>
+    <label>UPWARD KM</label>
+    <input id="up" type="number" placeholder="Km">
+
+    <label>LOAD QTY (MT)</label>
+    <input id="qty" type="number">
+
+    <label>Loaded Avg KM/L</label>
+    <input id="lav" type="number">
+
+    <label>Diesel Price ₹/L</label>
+    <input id="dprice" type="number">
+
+    <label>Mamul ₹</label>
+    <input id="mam" type="number" value="0">
+
+    <label>Border ₹</label>
+    <input id="borderExp" type="number" value="0">
+
+    <label>Tyre Exp ₹</label>
+    <input id="tyreExp" type="number" value="0">
+
+    <label>Two Point ₹</label>
+    <input id="twoPointExp" type="number" value="0">
 </div>
 
-<div class="row">
-<div><label>UPWARD KM</label><input id="up" type="number"></div>
-<div><label>RETURN KM</label><input id="ret" type="number"></div>
+<div class="col">
+    <label>TO</label>
+    <select id="to">
+        <option>Taloja</option><option>Sanand</option><option>Dahej</option>
+        <option>Mumbai</option>
+    </select>
+
+    <label>RETURN KM</label>
+    <input id="ret" type="number" placeholder="Km">
+
+    <label>RATE ₹/MT</label>
+    <input id="rmt" type="number">
+
+    <label>Empty Avg KM/L</label>
+    <input id="eav" type="number">
+
+    <label>Commission ₹</label>
+    <input id="com" type="number" value="0">
+
+    <label>Other Expenses ₹</label>
+    <input id="oth" type="number" value="0">
+
+    <label>Police ₹</label>
+    <input id="policeExp" type="number" value="0">
+
+    <label>Overload ₹</label>
+    <input id="overloadExp" type="number" value="0">
+
+    <label>ODC / Wide Load ₹</label>
+    <input id="odcExp" type="number" value="0">
+
+    <label>Toll Deduction ₹</label>
+    <input id="tollDeduct" type="number" value="0">
+
+    <label>Incentive Rate ₹/MT</label>
+    <input id="incRate" type="number" value="0">
 </div>
-
-<div class="row">
-<div><label>LOAD QTY (MT)</label><input id="qty" type="number"></div>
-<div><label>RATE ₹/MT</label><input id="rmt" type="number"></div>
-</div>
-
-<div class="row">
-<div><label>Loaded Avg KM/L</label><input id="lav" type="number"></div>
-<div><label>Empty Avg KM/L</label><input id="eav" type="number"></div>
-</div>
-
-<div class="row">
-<div><label>Diesel Price ₹/L</label><input id="dprice" type="number"></div>
-<div><label>Commission ₹</label><input id="com" type="number" value="0"></div>
-</div>
-
-<div class="row">
-<div><label>Mamul ₹</label><input id="mam" type="number" value="0"></div>
-<div><label>Other Expenses ₹</label><input id="oth" type="number" value="0"></div>
-</div>
-
-<!-- ADVANCE CALC + EXTRA EXPENSES -->
-
-<h3 style="margin:15px 0 5px;font-size:17px;">EXPENSES INCLUDED IN ADVANCE ↓</h3>
-
-<div class="row">
-<div><label>Border ₹</label><input id="borderExp" type="number" value="0"></div>
-<div><label>Police ₹</label><input id="policeExp" type="number" value="0"></div>
-</div>
-
-<div class="row">
-<div><label>Tyre Exp ₹</label><input id="tyreExp" type="number" value="0"></div>
-<div><label>Overload ₹</label><input id="overloadExp" type="number" value="0"></div>
-</div>
-
-<div class="row">
-<div><label>Two Point ₹</label><input id="twoPointExp" type="number" value="0"></div>
-<div><label>ODC / Wide Load ₹</label><input id="odcExp" type="number" value="0"></div>
-</div>
-
-<div class="row">
-<div><label>Toll Deduction ₹</label><input id="tollDeduct" type="number" value="0"></div>
-<div><label>Incentive Rate ₹/MT</label><input id="incRate" type="number" value="0"></div>
 </div>
 
 <button class="calc" onclick="calculate()">🚛 CALCULATE</button>
 <button class="whatsapp">WhatsApp Share</button>
 <button class="pdf">Print / Save PDF</button>
-
-<!-- RESULT DISPLAY -->
+</div>
 
 <div id="resultBox"></div>
 
-</div>
 
-<!-- ========================= SCRIPT ========================= -->
 
 <script>
 function calculate(){
+let up=+document.getElementById("up").value,
+    ret=+document.getElementById("ret").value,
+    qty=+document.getElementById("qty").value,
+    rmt=+document.getElementById("rmt").value,
+    lav=+document.getElementById("lav").value,
+    eav=+document.getElementById("eav").value,
+    dp=+document.getElementById("dprice").value,
+    com=+document.getElementById("com").value,
+    mam=+document.getElementById("mam").value,
+    oth=+document.getElementById("oth").value,
+    border=+document.getElementById("borderExp").value,
+    police=+document.getElementById("policeExp").value,
+    tyre=+document.getElementById("tyreExp").value,
+    overload=+document.getElementById("overloadExp").value,
+    twoPoint=+document.getElementById("twoPointExp").value,
+    odc=+document.getElementById("odcExp").value,
+    toll=+document.getElementById("tollDeduct").value,
+    incRate=+document.getElementById("incRate").value;
 
-let up=+up.value, ret=+ret.value, qty=+qty.value, rmt=+rmt.value, lav=+lav.value, eav=+eav.value, dp=+dprice.value;
-let com=+com.value, mam=+mam.value, oth=+oth.value, incR=+incRate.value;
-
-// Add-In-Advance Expenses
-let border=+borderExp.value, police=+policeExp.value, tyre=+tyreExp.value;
-let overload=+overloadExp.value, twoPoint=+twoPointExp.value, odc=+odcExp.value;
-let toll=+tollDeduct.value;
-
-// Core Values
 let freight = qty*rmt;
-let incentive = qty*incR;
+let incentive = qty*incRate;
 
-// Diesel
-let dieselLoad=(up/lav)*dp;
-let dieselEmpty=(ret/eav)*dp;
-let totalDiesel=dieselLoad+dieselEmpty;
+// Diesel Calculation
+let dieselLoad = (up/lav)*dp;
+let dieselReturn = (ret/eav)*dp;
+let dieselTotal = dieselLoad + dieselReturn;
 
-// Total ADVANCE = Diesel + all expenses
-let totalAdvance= totalDiesel + border + police + tyre + overload + twoPoint + odc;
+// Advance sum
+let totalAdvance = dieselTotal+border+police+tyre+overload+twoPoint+odc+mam+com+oth;
 
 // Final Balance
 let balance = (freight + incentive) - (totalAdvance + toll);
 
-// Show Output
-resultBox.style.display="block";
-resultBox.innerHTML = `
-🔹 <b>FREIGHT:</b> ₹${freight.toFixed(0)}<br>
-🔹 <b>INCENTIVE:</b> ₹${incentive.toFixed(0)}<br><hr>
+let r=document.getElementById("resultBox");
+r.style.display="block";
+r.innerHTML=`
+<b>Freight:</b> ₹${freight.toFixed(0)}<br>
+<b>Incentive:</b> ₹${incentive.toFixed(0)}<hr>
 
-🟦 Diesel Load Cost: ₹${dieselLoad.toFixed(0)}<br>
-🟦 Diesel Empty Cost: ₹${dieselEmpty.toFixed(0)}<br>
-<b>Total Diesel Cost = ₹${totalDiesel.toFixed(0)}</b><hr>
+<b>Diesel Load:</b> ₹${dieselLoad.toFixed(0)}<br>
+<b>Diesel Return:</b> ₹${dieselReturn.toFixed(0)}<br>
+<b>Total Diesel:</b> ₹${dieselTotal.toFixed(0)}<hr>
 
-<b>Advance Components:</b><br>
-Border ₹${border} | Police ₹${police} | Tyre ₹${tyre}<br>
-Overload ₹${overload} | Two-Point ₹${twoPoint} | ODC ₹${odc}<br><br>
+<b>Advance Breakdown:</b><br>
+Border ${border} | Police ${police} | Tyre ${tyre} | Overload ${overload} | 2-Point ${twoPoint} | ODC ${odc}<br><br>
 
-<b style="color:green;font-size:20px;">Total Advance = ₹${totalAdvance.toFixed(0)}</b><br>
-Toll Deduction = ₹${toll}<hr>
+<b>Total Advance = ₹${totalAdvance.toFixed(0)}</b><br>
+<b>Toll = ₹${toll}</b><hr>
 
-<b style="color:#d40000;font-size:22px;">FINAL BALANCE = ₹${balance.toFixed(0)}</b>
+<b style="color:#b30000;font-size:24px;">
+🚚 FINAL BALANCE = ₹${balance.toFixed(0)}
+</b>
 `;
 }
 </script>
+
 </body>
 </html>
