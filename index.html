@@ -6,89 +6,118 @@
 <title>MD MOVERS TRIP CALCULATOR</title>
 
 <style>
-body{margin:0;background:#eef1f4;font-family:Arial;}
-header{text-align:center;padding:25px;}
-header img{height:70px;margin-bottom:8px;}
-header h1{margin:0;font-size:28px;color:#0d1b3d;}
+    body { background:#f3f5f7; font-family: Arial, sans-serif; text-align:center; margin:0; }
 
-.card{
-    width:92%;max-width:900px;margin:auto;background:#fff;padding:25px;
-    border-radius:10px;box-shadow:0 0 16px rgba(0,0,0,.12);margin-top:15px;
-}
-input,select{
-    width:100%;padding:13px;font-size:17px;border-radius:6px;margin-top:8px;
-    border:1px solid #999;
-}
+    .logo { width:110px; margin-top:30px; }
+    h2 { font-size:26px; margin:8px 0 18px; font-weight:700; color:#111; }
 
-.btn{
-    width:100%;padding:14px;background:#000;color:#fff;border:none;
-    font-size:19px;margin-top:15px;border-radius:6px;cursor:pointer;
-}
-.btn-green{background:#087532;}
-.btn-grey{background:#2f3847;color:#fff;}
+    .box {
+        width:90%; max-width:650px; background:#fff; padding:25px;
+        border-radius:12px; margin:auto; box-shadow:0 0 10px rgba(0,0,0,0.1);
+    }
 
-.resultBox{background:#fff;padding:15px;margin-top:18px;border-radius:6px;font-size:18px;}
-.resultBox b{color:#0a6620;font-size:22px;}
+    select, input {
+        width:50%; padding:12px; margin:5px 2px;
+        border-radius:6px; border:1px solid #bbb; font-size:15px;
+    }
+
+    .btn {
+        width:90%; padding:15px; font-size:18px; color:#fff; border-radius:8px;
+        border:none; cursor:pointer; margin-top:18px; font-weight:bold;
+    }
+    .save { background:black; }
+    .whatsapp { background:#128C7E; }
 </style>
 </head>
+
 <body>
 
-<header>
-    <img src="logo.png">
-    <h1>TRIP CALCULATOR</h1>
-</header>
+<img src="logo.png" class="logo">
+<h2>TRIP CALCULATOR</h2>
 
-<div class="card">
+<div class="box">
 
 <!-- ROUTE -->
-<select id="from"> 
-  <option>Hazira</option><option>Taloja</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option>
+<select id="from">
+<option>Hazira</option>   
 </select>
+
 <select id="to">
-  <option>Taloja</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option><option>Ahemdabad</option>
+<option>Taloja</option>
+<option>Kalamboli</option>
+<option>Panvel</option>
+<option>Thane</option>
+<option>Khopoli</option>
+<option>Khalapur</option>
+<option>Ahemdabad</option>
+<option>Bavla</option>
+<option>Vatva</option>
+<option>Changodar</option>
+<option>Khatrej</option>
+<option>Sanand</option>
+<option>Kalol</option>
+<option>Chhatral</option>
+<option>Gandhinagar</option>
+<option>Mehsana</option>
+<option>Vithalapur</option>
+<option>Vadodara</option>
+<option>Savli</option>
+<option>Por</option>
+<option>Kheda</option>
+<option>Halol</option>
+<option>Vadindar</option>
 </select>
 
-<!-- DATA INPUT -->
-<input id="loadKM" type="number" placeholder="Load KM">
-<input id="emptyKM" type="number" placeholder="Empty KM">
-<input id="qty" type="number" placeholder="Qty MT">
-<input id="rate" type="number" placeholder="Rate per MT">
-<input id="loadAvg" type="number" step="0.1" placeholder="Load Average KM/L">
-<input id="emptyAvg" type="number" step="0.1" placeholder="Empty Average KM/L">
-<input id="dieselRate" type="number" placeholder="Diesel Price ₹/L">
-<input id="commission" type="number" placeholder="Commission ₹">
-<input id="mamul" type="number" placeholder="Mamul ₹">
+<!-- VALUES (COMPACT INLINE GRID) -->
+<input type="number" id="loadKm" placeholder="Load KM">
+<input type="number" id="emptyKm" placeholder="Empty KM">
 
-<button class="btn" onclick="calc()">🚛 CALCULATE & SAVE</button>
-<button class="btn btn-green" onclick="whatsapp()">WhatsApp Share</button>
-<button class="btn btn-grey" onclick="window.print()">Print / PDF</button>
+<input type="number" id="qty" placeholder="Qty MT">
+<input type="number" id="rate" placeholder="Rate ₹/MT">
 
-<div id="output" class="resultBox" style="display:none;"></div>
+<input type="number" id="avgLoad" placeholder="Load Avg KM/L">
+<input type="number" id="avgEmpty" placeholder="Empty Avg KM/L">
+
+<input type="number" id="fuel" placeholder="Diesel Rate ₹/L">
+<input type="number" id="commission" placeholder="Commission ₹">
+<input type="number" id="mamul" placeholder="Mamul ₹">
+
+<button class="btn save" onclick="calc()">🚛 CALCULATE</button>
+<button class="btn whatsapp" onclick="wa()">WhatsApp Share</button>
+
 </div>
+
 
 <script>
 function calc(){
- let lKM=+loadKM.value,eKM=+emptyKM.value,Q=+qty.value,R=+rate.value
- let lA=+loadAvg.value,eA=+emptyAvg.value,D=+dieselRate.value
- let C=+commission.value,M=+mamul.value
+    let l = +loadKm.value, e = +emptyKm.value, q = +qty.value, r = +rate.value;
+    let avgL = +avgLoad.value, avgE = +avgEmpty.value;
+    let price = +fuel.value, com = +commission.value, mam = +mamul.value;
+    
+    let freight = q*r;
+    let dieselUsed = (l/avgL) + (e/avgE);
+    let dieselCost = dieselUsed * price;
+    let saving = freight - dieselCost - com - mam;
 
- let freight=Q*R
- let diesel=(lKM/lA)+(eKM/eA)
- let dieselCost=diesel*D
- let net=freight-dieselCost-C-M
-
- output.style.display="block"
- output.innerHTML=
- `Freight: ₹${freight.toFixed(0)}<br>
- Diesel Used: ${diesel.toFixed(2)} L<br>
- Diesel Cost: ₹${dieselCost.toFixed(0)}<br>
- Commission: ₹${C}<br>
- Mamul: ₹${M}<br><br>
- <b>Net Saving: ₹${net.toFixed(0)}</b>`
+    alert(`Freight: ₹${freight}\nDiesel Used: ${dieselUsed.toFixed(2)} L\nDiesel Cost: ₹${dieselCost.toFixed(0)}\nSaving: ₹${saving.toFixed(0)}`);
 }
 
-function whatsapp(){
- alert("Next step: WhatsApp share system integrate 👍")
+function wa(){
+    let l = +loadKm.value, e = +emptyKm.value, q = +qty.value, r = +rate.value;
+    let avgL = +avgLoad.value, avgE = +avgEmpty.value;
+    let price = +fuel.value, com = +commission.value, mam = +mamul.value;
+
+    let freight = q*r;
+    let dieselUsed = (l/avgL) + (e/avgE);
+    let dieselCost = dieselUsed * price;
+    let saving = freight - dieselCost - com - mam;
+
+    let msg = `🚛 *MD MOVERS TRIP REPORT* %0A%0A` +
+              `From-To : ${from.value} → ${to.value}%0A` +
+              `KM: Load ${l} / Empty ${e}%0A` +
+              `Freight: ₹${freight}%0ADiesel Cost: ₹${dieselCost.toFixed(0)}%0ASaving: ₹${saving.toFixed(0)}`;
+
+    window.open(`https://wa.me/?text=${msg}`);
 }
 </script>
 
