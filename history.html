@@ -2,83 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MD Movers - Trip History</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="logo.png">
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
- body{ background:#F1F3F7; font-family:Segoe UI;}
-</style>
+<title>Trip History – MD Movers</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-gray-100">
 
-<!-- ================= HEADER ================= -->
-<header class="w-full bg-[#0B1C3F] text-white shadow-xl border-b-4 border-[#C22621]">
-    <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-4">
-            <img src="logo.png" class="w-14 drop-shadow-xl">
-            <div>
-                <h1 class="text-3xl font-extrabold tracking-wide">MD MOVERS FLEET SYSTEM</h1>
-                <p class="text-xs text-gray-300 -mt-1">TRIP HISTORY LOG 📑</p>
-            </div>
-        </div>
-        <a href="index.html" class="px-6 py-2 bg-red-600 hover:bg-red-800 rounded font-semibold">← Back</a>
-    </div>
+<header class="bg-[#0A1B3A] text-white py-4 flex items-center justify-center gap-4">
+    <img src="logo.png" class="h-12"><h1 class="text-2xl font-bold">TRIP HISTORY</h1>
 </header>
 
-
-<!-- ================= HISTORY TABLE ================= -->
-<div class="max-w-6xl mx-auto bg-white p-6 mt-10 rounded-xl shadow-2xl">
-
-<h2 class="text-xl font-bold text-center text-[#0B1C3F] mb-4">Saved Trip Records</h2>
-
-<table class="w-full border text-sm text-center">
-<thead class="bg-gray-900 text-white">
-<tr>
-<th>Date/Time</th>
-<th>Route</th>
-<th>Qty</th>
-<th>Rate</th>
-<th>Net</th>
-<th>Adv Used</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="tripData" class="text-gray-700 font-medium"></tbody>
-</table>
+<div class="max-w-5xl mx-auto bg-white p-6 mt-6 rounded shadow">
+    <p class="text-center text-gray-500 py-10 text-xl">No trips saved yet.</p>
 </div>
 
+<a href="index.html">
+<button class="w-full mt-5 bg-blue-600 text-white py-4 text-xl">
+🔙 Back to Calculator
+</button>
+</a>
 
-<!-- ================= LOCAL STORAGE HISTORY LOAD ================= -->
-<script>
-let history = JSON.parse(localStorage.getItem("mdTrips"))||[];
-let html="";
-
-history.forEach(t=>{
- html+=`
- <tr class="border">
-  <td>${t.date}</td>
-  <td>${t.route}</td>
-  <td>${t.qty}</td>
-  <td>₹${t.rate}</td>
-  <td class="font-bold text-blue-700">₹${t.net}</td>
-  <td>₹${t.advUsed}</td>
-  <td class="${t.status=='Profit'?'text-green-700 font-bold':'text-red-700 font-bold'}">${t.status}</td>
- </tr>`;
-});
-
-document.getElementById("tripData").innerHTML = 
- html || "<tr><td colspan='7' class='py-4 text-gray-500'>No Trips Logged Yet</td></tr>";
-</script>
-
-
-<!-- ================= FOOTER ================= -->
-<footer class="mt-16 bg-[#0B1C3F] text-gray-200 text-center py-3 text-sm">
-© 2025 MD MOVERS — Fleet Automation System
-</footer>
-
-</body>
-</html>
+</body></html>
