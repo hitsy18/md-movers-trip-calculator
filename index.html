@@ -1,113 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>MD MOVERS — Trip Calculator</title>
+<title>MD MOVERS — TRIP CALCULATOR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-    font-family: Poppins, sans-serif;
-    background:#F2F4F7;
-    padding:0;margin:0;
-    text-align:center;
-}
-.container{
-    max-width:850px;
-    background:#fff;
-    margin:30px auto;
-    border-radius:10px;
-    padding:25px;
-    box-shadow:0 0 20px rgba(0,0,0,0.15);
-}
-input,select{
-    width:100%;
-    padding:10px;
-    border-radius:6px;
-    border:1px solid #ccc;
-    margin:6px 0;
-    font-size:15px;
-}
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-/* buttons */
-.btn{
-    width:100%;padding:12px;margin-top:10px;
-    font-size:17px;border:none;border-radius:6px;
-    color:#fff;cursor:pointer;font-weight:600;
-}
-.calc-btn{background:#000;}
-.whatsapp-btn{background:#007a20;}
-.pdf-btn{background:#132030;}
-.btn:active{transform:scale(.98);}
-
-/* ==== RESULT BOX ==== */
-.result-box{
-    margin-top:20px;
-    background:#ECF8E8;
-    border-left:6px solid #00a329;
-    padding:18px;
-    border-radius:6px;
-    display:none;
-}
-.result-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    text-align:left;
-}
-.result-box h2{
-    background:#00a329;
-    color:#fff;
-    padding:10px;
-    border-radius:6px;
-    letter-spacing:1px;
-    margin-top:18px;
-}
-label{font-size:13px;font-weight:600;text-transform:uppercase;color:#333;}
+body{font-family: 'Poppins', sans-serif;background:#F2F4F7;margin:0;text-align:center;}
+.container{max-width:850px;background:#fff;margin:30px auto;padding:25px;border-radius:10px;
+box-shadow:0 0 12px rgba(0,0,0,0.1);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:15px;}
+label{font-size:12px;font-weight:600;color:#222;margin-bottom:4px;display:block;}
+.btn{width:100%;padding:12px;border-radius:6px;font-size:17px;font-weight:600;border:none;color:#fff;margin-top:12px;}
+.calc-btn{background:#000;} .whatsapp-btn{background:#006d24;} .pdf-btn{background:#1f2a39;}
+.result{background:#ecfbe4;border-left:6px solid #07a63a;margin-top:20px;padding:15px;border-radius:6px;display:none;}
+.result h2{background:#07a63a;color:#fff;padding:8px;border-radius:5px;margin-top:10px;}
+.result table{width:100%;font-size:16px;margin-top:10px;}
+.result td{padding:6px;text-align:left;}
 </style>
 </head>
 
 <body>
 
-<img src="logo.png" style="height:80px;margin-top:10px">
+<img src="logo.png" style="height:80px;margin-top:12px;">
 <h2>TRIP CALCULATOR</h2>
 
 <div class="container">
 
-<!-- dropdown -->
+<!-- From To -->
 <div class="form-grid">
-    <div><label>FROM</label><select id="from">
-        <option>Hazira</option><option>Taloja</option><option>Surat</option><option>Dahej</option>
-    </select></div>
-
-    <div><label>TO</label><select id="to">
-        <option>Taloja</option><option>Hazira</option><option>Surat</option><option>Dahej</option>
-    </select></div>
+ <div>
+  <label>FROM</label>
+  <select id="from">
+   <option>Hazira</option><option>Taloja</option><option>Dahej</option><option>Surat</option>
+  </select>
+ </div>
+ <div>
+  <label>TO</label>
+  <select id="to">
+   <option>Taloja</option><option>Hazira</option><option>Dahej</option><option>Surat</option>
+  </select>
+ </div>
 </div>
 
-<!-- input grid 2 column -->
+<!-- Main Inputs -->
 <div class="form-grid">
 
-    <div><label>Load KM</label><input id="loadKM" type="number"></div>
-    <div><label>Empty KM</label><input id="emptyKM" type="number"></div>
+<div><label>Load KM</label><input type="number" id="loadKM"></div>
+<div><label>Empty KM</label><input type="number" id="emptyKM"></div>
 
-    <div><label>Qty MT</label><input id="qty" type="number"></div>
-    <div><label>Rate ₹/MT</label><input id="rate" type="number"></div>
+<div><label>Qty MT</label><input type="number" id="qty"></div>
+<div><label>Rate ₹/MT</label><input type="number" id="rate"></div>
 
-    <div><label>Loaded Avg KM/L</label><input id="lavg" type="number"></div>
-    <div><label>Empty Avg KM/L</label><input id="eavg" type="number"></div>
+<div><label>Loaded Avg KM/L</label><input type="number" id="lavg"></div>
+<div><label>Empty Avg KM/L</label><input type="number" id="eavg"></div>
 
-    <div><label>Diesel Price ₹/L</label><input id="diesel" type="number"></div>
-    <div><label>Commission ₹</label><input id="commission" type="number" value="0"></div>
+<div><label>Diesel Price ₹/L</label><input type="number" id="diesel"></div>
+<div><label>Commission ₹</label><input type="number" id="commission" value="0"></div>
 
-    <div><label>Mamul ₹</label><input id="mamul" type="number" value="0"></div>
-    <div><label>Other Expense ₹</label><input id="other" type="number" value="0"></div>
+<div><label>Mamul ₹</label><input type="number" id="mamul" value="0"></div>
+<div><label>Other Expense ₹</label><input type="number" id="other" value="0"></div>
 
 </div>
 
@@ -116,47 +69,60 @@ label{font-size:13px;font-weight:600;text-transform:uppercase;color:#333;}
 <button class="btn pdf-btn" onclick="window.print()">Print / Save PDF</button>
 
 
-<!-- RESULT UI -->
-<div id="result" class="result-box">
-    <div class="result-grid">
-        <p><b>Freight:</b> ₹<span id="r_freight"></span></p>
-        <p><b>Fuel Used:</b> <span id="r_fuel"></span> L</p>
-
-        <p><b>Fuel Cost:</b> ₹<span id="r_cost"></span></p>
-        <p><b>Expenses:</b> ₹<span id="r_expense"></span></p>
-    </div>
-
-    <h2>PROFIT: ₹<span id="r_profit"></span></h2>
+<!-- Result BOX -->
+<div id="result" class="result">
+ <table>
+  <tr><td><b>Freight</b></td><td>₹ <span id="out_freight"></span></td></tr>
+  <tr><td><b>Fuel Used</b></td><td><span id="out_fuel"></span> L</td></tr>
+  <tr><td><b>Fuel Cost</b></td><td>₹ <span id="out_cost"></span></td></tr>
+  <tr><td><b>Total Expenses</b></td><td>₹ <span id="out_expense"></span></td></tr>
+ </table>
+ <h2>PROFIT : ₹ <span id="out_profit"></span></h2>
 </div>
 
 </div>
+
+
 
 <script>
 function calculate(){
-    let L=+loadKM.value, E=+emptyKM.value;
-    let qty=+qty.value, rate=+rate.value;
-    let lavg=+lavg.value, eavg=+eavg.value;
-    let price=+diesel.value;
-    let com=+commission.value, mamul=+mamul.value, other=+other.value;
 
-    let freight=qty*rate;
-    let fuelUsed=(L/lavg)+(E/eavg);
-    let fuelCost=fuelUsed*price;
-    let totalExp=com+mamul+other+fuelCost;
-    let profit=freight-totalExp;
+ let L=+loadKM.value, E=+emptyKM.value;
+ let qty=+qty.value, rate=+rate.value;
+ let lavg=+lavg.value, eavg=+eavg.value;
+ let price=+diesel.value;
+ let com=+commission.value, mamul=+mamul.value, other=+other.value;
 
-    r_freight.innerText=freight;
-    r_fuel.innerText=fuelUsed.toFixed(2);
-    r_cost.innerText=fuelCost.toFixed(0);
-    r_expense.innerText=totalExp.toFixed(0);
-    r_profit.innerText=profit.toFixed(0);
+ if(L==0||qty==0||rate==0||lavg==0||price==0){
+     alert("⚠ Please Fill Required Input Values");
+     return;
+ }
 
-    document.getElementById("result").style.display="block";
+ let freight = qty*rate;
+ let fuelUsed = (L/lavg)+(E/eavg);
+ let fuelCost = fuelUsed * price;
+ let totalExp = com+mamul+other+fuelCost;
+ let profit = freight - totalExp;
+
+ out_freight.innerText = freight;
+ out_fuel.innerText    = fuelUsed.toFixed(2);
+ out_cost.innerText    = fuelCost.toFixed(0);
+ out_expense.innerText = totalExp.toFixed(0);
+ out_profit.innerText  = profit.toFixed(0);
+
+ document.getElementById("result").style.display="block";
 }
 
+
 function share(){
-    let msg=`🚚 Trip Summary\nFreight: ₹${r_freight.innerText}\nFuel Used: ${r_fuel.innerText}L\nFuel Cost: ₹${r_cost.innerText}\nTotal Expense: ₹${r_expense.innerText}\n\nProfit: ₹${r_profit.innerText}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,"_blank");
+ let msg=`🚛 Trip Summary
+Freight: ₹${out_freight.innerText}
+Fuel Used: ${out_fuel.innerText}L
+Fuel Cost: ₹${out_cost.innerText}
+Total Expense: ₹${out_expense.innerText}
+Profit: ₹${out_profit.innerText}`;
+
+ window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
 }
 </script>
 
