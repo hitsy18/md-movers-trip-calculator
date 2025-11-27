@@ -3,72 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD MOVERS TRIP CALCULATOR</title>
+<title>MD MOVERS – Trip Calculator</title>
 
 <style>
-    body { background:#f3f5f7; font-family: Arial, sans-serif; text-align:center; margin:0; }
+    body{margin:0;background:#eef1f4;font-family:Segoe UI,Arial;text-align:center;}
 
-    .logo { width:110px; margin-top:30px; }
-    h2 { font-size:26px; margin:8px 0 18px; font-weight:700; color:#111; }
+    .header-img{width:120px;margin-top:25px;}
+    h1{margin:5px 0 18px;font-size:26px;font-weight:700;color:#0e1a2b;}
 
-    .box {
-        width:90%; max-width:650px; background:#fff; padding:25px;
-        border-radius:12px; margin:auto; box-shadow:0 0 10px rgba(0,0,0,0.1);
+    .card{
+        width:92%;max-width:820px;background:#fff;padding:25px 25px 35px;
+        margin:auto;border-radius:12px;display:flex;flex-wrap:wrap;gap:14px;
+        box-shadow:0 0 10px rgba(0,0,0,0.1);justify-content:center;
     }
-
-    select, input {
-        width:50%; padding:12px; margin:5px 2px;
-        border-radius:6px; border:1px solid #bbb; font-size:15px;
+    select,input{
+        width:48%;padding:13px;border-radius:8px;border:1px solid #aaa;
+        font-size:15px;font-weight:500;background:#fdfdfd;
     }
-
-    .btn {
-        width:90%; padding:15px; font-size:18px; color:#fff; border-radius:8px;
-        border:none; cursor:pointer; margin-top:18px; font-weight:bold;
+    .btn{
+        width:100%;padding:15px;margin-top:18px;border:none;
+        border-radius:8px;font-size:18px;font-weight:700;color:#fff;
     }
-    .save { background:black; }
-    .whatsapp { background:#128C7E; }
+    .save{background:#111;}
+    .whatsapp{background:#007d61;}
 </style>
 </head>
 
 <body>
 
-<img src="logo.png" class="logo">
-<h2>TRIP CALCULATOR</h2>
+<img src="logo.png" class="header-img">
+<h1>TRIP CALCULATOR</h1>
 
-<div class="box">
+<div class="card">
 
-<!-- ROUTE -->
-<select id="from">
-<option>Hazira</option>   
-</select>
-
+<select id="from"><option>Hazira</option></select>
 <select id="to">
-<option>Taloja</option>
-<option>Kalamboli</option>
-<option>Panvel</option>
-<option>Thane</option>
-<option>Khopoli</option>
-<option>Khalapur</option>
-<option>Ahemdabad</option>
-<option>Bavla</option>
-<option>Vatva</option>
-<option>Changodar</option>
-<option>Khatrej</option>
-<option>Sanand</option>
-<option>Kalol</option>
-<option>Chhatral</option>
-<option>Gandhinagar</option>
-<option>Mehsana</option>
-<option>Vithalapur</option>
-<option>Vadodara</option>
-<option>Savli</option>
-<option>Por</option>
-<option>Kheda</option>
-<option>Halol</option>
-<option>Vadindar</option>
+<option>Taloja</option><option>Kalamboli</option><option>Panvel</option><option>Thane</option>
+<option>Khopoli</option><option>Khalapur</option><option>Ahemdabad</option><option>Bavla</option>
+<option>Vatva</option><option>Changodar</option><option>Khatrej</option><option>Sanand</option>
+<option>Kalol</option><option>Chhatral</option><option>Gandhinagar</option><option>Mehsana</option>
+<option>Vithalapur</option><option>Vadodara</option><option>Savli</option><option>Por</option>
+<option>Kheda</option><option>Halol</option><option>Vadindar</option>
 </select>
 
-<!-- VALUES (COMPACT INLINE GRID) -->
 <input type="number" id="loadKm" placeholder="Load KM">
 <input type="number" id="emptyKm" placeholder="Empty KM">
 
@@ -78,44 +55,29 @@
 <input type="number" id="avgLoad" placeholder="Load Avg KM/L">
 <input type="number" id="avgEmpty" placeholder="Empty Avg KM/L">
 
-<input type="number" id="fuel" placeholder="Diesel Rate ₹/L">
+<input type="number" id="fuel" placeholder="Diesel Price ₹/L">
 <input type="number" id="commission" placeholder="Commission ₹">
+
 <input type="number" id="mamul" placeholder="Mamul ₹">
+<input type="number" id="extra" placeholder="Other Expense ₹">
 
 <button class="btn save" onclick="calc()">🚛 CALCULATE</button>
 <button class="btn whatsapp" onclick="wa()">WhatsApp Share</button>
 
 </div>
 
-
 <script>
 function calc(){
-    let l = +loadKm.value, e = +emptyKm.value, q = +qty.value, r = +rate.value;
-    let avgL = +avgLoad.value, avgE = +avgEmpty.value;
-    let price = +fuel.value, com = +commission.value, mam = +mamul.value;
-    
-    let freight = q*r;
-    let dieselUsed = (l/avgL) + (e/avgE);
-    let dieselCost = dieselUsed * price;
-    let saving = freight - dieselCost - com - mam;
+    let l=+loadKm.value,e=+emptyKm.value,q=+qty.value,r=+rate.value;
+    let aL=+avgLoad.value,aE=+avgEmpty.value,f=+fuel.value,c=+commission.value,m=+mamul.value,x=+extra.value;
+    let freight=q*r,diesel=(l/aL)+(e/aE),cost=diesel*f,saving=freight-cost-c-m-x;
 
-    alert(`Freight: ₹${freight}\nDiesel Used: ${dieselUsed.toFixed(2)} L\nDiesel Cost: ₹${dieselCost.toFixed(0)}\nSaving: ₹${saving.toFixed(0)}`);
+    alert(`Freight ₹${freight}\nDiesel Used: ${diesel.toFixed(2)} L\nDiesel Cost ₹${cost.toFixed(0)}\nProfit ₹${saving.toFixed(0)}`);
 }
-
 function wa(){
-    let l = +loadKm.value, e = +emptyKm.value, q = +qty.value, r = +rate.value;
-    let avgL = +avgLoad.value, avgE = +avgEmpty.value;
-    let price = +fuel.value, com = +commission.value, mam = +mamul.value;
-
-    let freight = q*r;
-    let dieselUsed = (l/avgL) + (e/avgE);
-    let dieselCost = dieselUsed * price;
-    let saving = freight - dieselCost - com - mam;
-
-    let msg = `🚛 *MD MOVERS TRIP REPORT* %0A%0A` +
-              `From-To : ${from.value} → ${to.value}%0A` +
-              `KM: Load ${l} / Empty ${e}%0A` +
-              `Freight: ₹${freight}%0ADiesel Cost: ₹${dieselCost.toFixed(0)}%0ASaving: ₹${saving.toFixed(0)}`;
+    let l=loadKm.value,e=emptyKm.value,q=qty.value,r=rate.value,s=document.querySelector;
+    let msg=`🚛 *MD MOVERS TRIP REPORT* %0A%0AFrom: ${from.value} → ${to.value}%0AQty: ${q}MT @₹${r}%0A
+Load KM:${l} Empty:${e}%0AProfit Calculation Attached`;
 
     window.open(`https://wa.me/?text=${msg}`);
 }
